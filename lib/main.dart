@@ -1,0 +1,172 @@
+import 'package:busfinder/api_service.dart';
+import 'package:busfinder/bloc/authentication_cubit.dart';
+import 'package:busfinder/bloc/authentication_state.dart';
+import 'package:busfinder/bloc/go_router_refresh_stream.dart';
+import 'package:busfinder/routes/admin/stops/add_stop_route.dart';
+import 'package:busfinder/routes/admin/bus_routes/bus_routes_route.dart';
+import 'package:busfinder/routes/admin/bus_routes/add_bus_route_route.dart';
+import 'package:busfinder/routes/admin/bus_routes/add_variant_route.dart';
+import 'package:busfinder/routes/admin/bus_routes/edit_bus_route_route.dart';
+import 'package:busfinder/routes/bus_route_view_route.dart';
+import 'package:busfinder/routes/bus_stop_timetable_route.dart';
+import 'package:busfinder/routes/login_route.dart';
+import 'package:busfinder/routes/main_route.dart';
+import 'package:busfinder/routes/signup_route.dart';
+import 'package:busfinder/routes/admin/stops/stops_route.dart';
+import 'package:busfinder/routes/admin/users/users_route.dart';
+import 'package:busfinder/routes/welcome_route.dart';
+import 'package:busfinder/routes/admin/schedules/schedules_route.dart';
+import 'package:busfinder/routes/admin/schedules/add_schedule_route.dart';
+import 'package:busfinder/routes/admin/schedules/edit_schedule_route.dart';
+import 'package:busfinder_api/api.dart';
+import 'package:flutter/material.dart';
+import 'package:form_builder_validators/localization/l10n.dart';
+import 'package:go_router/go_router.dart';
+import 'l10n/app_localizations.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final apiService = ApiService(ApiClient());
+
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? HydratedStorageDirectory.web
+        : HydratedStorageDirectory((await getTemporaryDirectory()).path),
+  );
+
+  runApp(
+    MultiRepositoryProvider(
+      providers: [RepositoryProvider<ApiService>.value(value: apiService)],
+      child: BlocProvider(
+        create: (context) => AuthenticationCubit(context.read<ApiService>()),
+        child: BusFinderApp(),
+      ),
+    ),
+  );
+}
+
+class BusFinderApp extends StatelessWidget {
+  const BusFinderApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authCubit = context.read<AuthenticationCubit>();
+
+    final router = GoRouter(
+      refreshListenable: GoRouterRefreshStream(authCubit.stream),
+      redirect: (context, state) {
+        final onboarding = {
+          '/welcome',
+          '/login',
+          '/signup',
+        }.contains(state.matchedLocation);
+
+        switch (authCubit.state) {
+          case NotLoggedIn():
+            if (!onboarding) return '/welcome';
+          case LoggedIn():
+            if (onboarding) return '/';
+        }
+
+        return null;
+      },
+      routes: [
+        GoRoute(path: '/', builder: (context, state) => MainRoute()),
+        GoRoute(path: '/welcome', builder: (context, state) => WelcomeRoute()),
+        GoRoute(path: '/login', builder: (context, state) => LoginRoute()),
+        GoRoute(path: '/signup', builder: (context, state) => SignupRoute()),
+        GoRoute(
+          path: '/bus-route',
+          builder: (context, state) => BusRouteViewRoute(
+            route: (state.extra as Map<String, dynamic>)['route'],
+          ),
+        ),
+        GoRoute(
+          path: '/timetable',
+          builder: (context, state) => BusStopTimetableRoute(
+            busStopId: (state.extra as Map<String, dynamic>)['busStopId'],
+            schedules: (state.extra as Map<String, dynamic>)['schedules'],
+            busStopName: (state.extra as Map<String, dynamic>)['busStopName'],
+            busRouteId: (state.extra as Map<String, dynamic>)['busRouteId'],
+            variants: (state.extra as Map<String, dynamic>)['variants'],
+          ),
+        ),
+        GoRoute(
+          path: '/admin/users',
+          builder: (context, state) => UsersRoute(),
+        ),
+        GoRoute(
+          path: '/admin/stops',
+          builder: (context, state) => StopsRoute(),
+        ),
+        GoRoute(
+          path: '/admin/stops/add',
+          builder: (context, state) => AddStopRoute(),
+        ),
+        GoRoute(
+          path: '/admin/stops/edit',
+          builder: (context, state) => AddStopRoute(
+            busStop: (state.extra as Map<String, dynamic>)['busStop'],
+          ),
+        ),
+        GoRoute(
+          path: '/admin/routes',
+          builder: (context, state) => BusRoutesRoute(),
+        ),
+        GoRoute(
+          path: '/admin/routes/add',
+          builder: (context, state) => AddBusRouteRoute(),
+        ),
+        GoRoute(
+          path: '/admin/routes/edit',
+          builder: (context, state) => EditBusRouteRoute(
+            busRoute: (state.extra as Map<String, dynamic>)['route'],
+          ),
+        ),
+        GoRoute(
+          path: '/admin/routes/edit/variant',
+          builder: (context, state) => AddVariantRoute(
+            variant: (state.extra as Map<String, dynamic>?)?['variant'],
+          ),
+        ),
+        GoRoute(
+          path: '/admin/schedules',
+          builder: (context, state) => const SchedulesRoute(),
+        ),
+        GoRoute(
+          path: '/admin/schedules/add',
+          builder: (context, state) => AddScheduleRoute(
+            routes: (state.extra as Map<String, dynamic>)['routes'],
+          ),
+        ),
+        GoRoute(
+          path: '/admin/schedules/edit',
+          builder: (context, state) => EditScheduleRoute(
+            schedule: (state.extra as Map<String, dynamic>)['schedule'],
+          ),
+        ),
+      ],
+    );
+
+    return MaterialApp.router(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+        ),
+      ),
+      localizationsDelegates: [
+        ...AppLocalizations.localizationsDelegates,
+        FormBuilderLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      routerConfig: router,
+      //locale: Locale('en'),
+    );
+  }
+}
