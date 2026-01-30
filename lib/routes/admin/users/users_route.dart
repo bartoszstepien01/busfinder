@@ -1,9 +1,10 @@
-import 'package:busfinder/api_service.dart';
+import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/bloc/authentication_state.dart';
-import 'package:busfinder/components/confirm_delete_dialog.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
-import 'package:busfinder/components/user_type_dialog.dart';
+import 'package:busfinder/widgets/confirm_delete_dialog.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
+import 'package:busfinder/widgets/responsive_container.dart';
+import 'package:busfinder/widgets/user_type_dialog.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
@@ -83,48 +84,53 @@ class _UsersRouteState extends State<UsersRoute> {
       appBar: AppBar(title: Text(localizations.users)),
       body: _isLoading
           ? const LoadingIndicator()
-          : ListView.builder(
-              itemCount: _users.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: const Icon(Icons.person),
-                title: Text('${_users[index].name} ${_users[index].surname}'),
-                subtitle: Text(_users[index].email),
-                trailing: InkWell(
-                  child: Icon(Icons.delete),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => ConfirmDeleteDialog(
-                      content: localizations.areYouSureDeleteUser(
-                        _users[index].email,
+          : ResponsiveContainer(
+              child: ListView.builder(
+                itemCount: _users.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: const Icon(Icons.person),
+                  title: Text('${_users[index].name} ${_users[index].surname}'),
+                  subtitle: Text(_users[index].email),
+                  trailing: InkWell(
+                    child: Icon(Icons.delete),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => ConfirmDeleteDialog(
+                        content: localizations.areYouSureDeleteUser(
+                          _users[index].email,
+                        ),
+                        onConfirm: () async {
+                          await deleteUser(_users[index].id);
+                        },
                       ),
-                      onConfirm: () async {
-                        await deleteUser(_users[index].id);
-                      },
                     ),
                   ),
+                  onTap: () async {
+                    final newType =
+                        await showDialog(
+                              context: context,
+                              builder: (context) => UserTypeDialog(
+                                userId: _users[index].id,
+                                userType: UserType.values.firstWhere(
+                                  (element) =>
+                                      element.name ==
+                                      _users[index].userType.value,
+                                ),
+                              ),
+                            )
+                            as UserType?;
+
+                    if (newType == null) {
+                      return;
+                    }
+
+                    setState(() {
+                      _users[index].userType =
+                          UserResponseDtoUserTypeEnum.fromJson(newType.name) ??
+                          UserResponseDtoUserTypeEnum.user;
+                    });
+                  },
                 ),
-                onTap: () async {
-                  final newType = await showDialog(
-                    context: context,
-                    builder: (context) => UserTypeDialog(
-                      userId: _users[index].id,
-                      userType: UserType.values.firstWhere(
-                        (element) =>
-                            element.name == _users[index].userType.value,
-                      ),
-                    ),
-                  ) as UserType?;
-
-                  if (newType == null) {
-                    return;
-                  }
-
-                  setState(() {
-                    _users[index].userType =
-                        UserResponseDtoUserTypeEnum.fromJson(newType.name) ??
-                        UserResponseDtoUserTypeEnum.user;
-                  });
-                },
               ),
             ),
     );

@@ -1,10 +1,12 @@
 import 'package:busfinder/bloc/authentication_cubit.dart';
 import 'package:busfinder/bloc/authentication_state.dart';
-import 'package:busfinder/components/bus_routes_list.dart';
+import 'package:busfinder/widgets/main/driver.dart';
+import 'package:busfinder/widgets/main/map.dart';
+import 'package:busfinder/widgets/main/profile.dart';
+import 'package:busfinder/widgets/main/timetables.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class MainRoute extends StatefulWidget {
   const MainRoute({super.key});
@@ -20,116 +22,117 @@ class _MainRouteState extends State<MainRoute> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
+    final isDesktop = MediaQuery.of(context).size.width >= 1000;
 
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 32,
-                  child: Icon(Icons.person, size: 40),
-                ),
-                const SizedBox(width: 20),
-                Text(
-                  localizations.hello('Bartosz'),
-                  style: theme.textTheme.headlineMedium,
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
-          Expanded(child: 
-                    BusRoutesList()),
-          Expanded(
-            child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
-              builder: (context, state) {
-                return ListView(
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsGeometry.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      child: Text(localizations.general),
+    return BlocBuilder<AuthenticationCubit, AuthenticationState>(
+      builder: (context, state) {
+        final tabCount =
+            (state is LoggedIn && state.userType == UserType.driver) ? 4 : 3;
+
+        return Scaffold(
+          body: Row(
+            children: [
+              if (isDesktop)
+                NavigationRail(
+                  selectedIndex: _selectedIndex % tabCount,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  labelType: NavigationRailLabelType.all,
+                  destinations: <NavigationRailDestination>[
+                    NavigationRailDestination(
+                      icon: Icon(Icons.schedule),
+                      label: Text(localizations.timetables),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.sunny),
-                      title: Text(localizations.theme),
-                      onTap: () => null,
+                    NavigationRailDestination(
+                      icon: Icon(Icons.map),
+                      label: Text(localizations.map),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.language),
-                      title: Text(localizations.language),
-                      onTap: () => null,
+                    if (state is LoggedIn && state.userType == UserType.driver)
+                      NavigationRailDestination(
+                        icon: Icon(Icons.directions_bus),
+                        label: Text(localizations.driver),
+                      ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.person),
+                      label: Text(localizations.profile),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.logout),
-                      title: Text(localizations.logout),
-                      onTap: () => context.read<AuthenticationCubit>().logOut(),
-                    ),
-                    if (state is LoggedIn &&
-                        state.userType == UserType.admin) ...[
-                      const Divider(),
-                      Padding(
-                        padding: EdgeInsetsGeometry.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        child: Text(localizations.adminOptions),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.person),
-                        title: Text(localizations.users),
-                        onTap: () => context.push('/admin/users'),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.location_pin),
-                        title: Text(localizations.stops),
-                        onTap: () => context.push('/admin/stops'),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.directions_bus),
-                        title: Text(localizations.lines),
-                        onTap: () => context.push('/admin/routes'),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.schedule),
-                        title: const Text('Schedules'),
-                        onTap: () => context.push('/admin/schedules'),
-                      ),
-                    ],
                   ],
-                );
-              },
-            ),
+                ),
+              if (isDesktop) const VerticalDivider(thickness: 1, width: 1),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 320),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) {
+                    final fade = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOut,
+                    );
+                    final slide =
+                        Tween<Offset>(
+                          begin: const Offset(0.12, 0),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        );
+
+                    return FadeTransition(
+                      opacity: fade,
+                      child: SlideTransition(position: slide, child: child),
+                    );
+                  },
+                  child: IndexedStack(
+                    key: ValueKey(_selectedIndex),
+                    index: _selectedIndex % tabCount,
+                    children: <Widget>[
+                      Timetables(),
+                      MapWidget(),
+                      if (state is LoggedIn &&
+                          state.userType == UserType.driver)
+                        Driver(),
+                      Profile(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.schedule),
-            label: localizations.timetables,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: localizations.map,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: localizations.profile,
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: (value) => setState(() {
-          _selectedIndex = value;
-        }),
-        selectedItemColor: theme.colorScheme.primary,
-      ),
+          bottomNavigationBar: isDesktop
+              ? null
+              : BottomNavigationBar(
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.schedule),
+                      label: localizations.timetables,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.map),
+                      label: localizations.map,
+                    ),
+                    if (state is LoggedIn && state.userType == UserType.driver)
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.directions_bus),
+                        label: localizations.driver,
+                      ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: localizations.profile,
+                    ),
+                  ],
+                  currentIndex: _selectedIndex % tabCount,
+                  onTap: (i) => setState(() => _selectedIndex = i),
+                  selectedItemColor: theme.colorScheme.primary,
+                  unselectedItemColor: theme.colorScheme.onSurfaceVariant,
+                ),
+        );
+      },
     );
   }
 }

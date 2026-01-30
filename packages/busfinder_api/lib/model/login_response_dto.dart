@@ -25,26 +25,27 @@ class LoginResponseDto {
   LoginResponseDtoUserTypeEnum userType;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is LoginResponseDto &&
-    other.token == token &&
-    other.expiresIn == expiresIn &&
-    other.userType == userType;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LoginResponseDto &&
+          other.token == token &&
+          other.expiresIn == expiresIn &&
+          other.userType == userType;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (token.hashCode) +
-    (expiresIn.hashCode) +
-    (userType.hashCode);
+      // ignore: unnecessary_parenthesis
+      (token.hashCode) + (expiresIn.hashCode) + (userType.hashCode);
 
   @override
-  String toString() => 'LoginResponseDto[token=$token, expiresIn=$expiresIn, userType=$userType]';
+  String toString() =>
+      'LoginResponseDto[token=$token, expiresIn=$expiresIn, userType=$userType]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'token'] = this.token;
-      json[r'expiresIn'] = this.expiresIn;
-      json[r'userType'] = this.userType;
+    json[r'token'] = this.token;
+    json[r'expiresIn'] = this.expiresIn;
+    json[r'userType'] = this.userType;
     return json;
   }
 
@@ -60,8 +61,10 @@ class LoginResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "LoginResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "LoginResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "LoginResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "LoginResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -75,7 +78,10 @@ class LoginResponseDto {
     return null;
   }
 
-  static List<LoginResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<LoginResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <LoginResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -103,13 +109,19 @@ class LoginResponseDto {
   }
 
   // maps a json object with a list of LoginResponseDto-objects as value to a dart map
-  static Map<String, List<LoginResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<LoginResponseDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<LoginResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = LoginResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = LoginResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -122,7 +134,6 @@ class LoginResponseDto {
     'userType',
   };
 }
-
 
 class LoginResponseDtoUserTypeEnum {
   /// Instantiate a new enum with the provided [value].
@@ -147,9 +158,13 @@ class LoginResponseDtoUserTypeEnum {
     admin,
   ];
 
-  static LoginResponseDtoUserTypeEnum? fromJson(dynamic value) => LoginResponseDtoUserTypeEnumTypeTransformer().decode(value);
+  static LoginResponseDtoUserTypeEnum? fromJson(dynamic value) =>
+      LoginResponseDtoUserTypeEnumTypeTransformer().decode(value);
 
-  static List<LoginResponseDtoUserTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<LoginResponseDtoUserTypeEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <LoginResponseDtoUserTypeEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -166,7 +181,8 @@ class LoginResponseDtoUserTypeEnum {
 /// Transformation class that can [encode] an instance of [LoginResponseDtoUserTypeEnum] to String,
 /// and [decode] dynamic data back to [LoginResponseDtoUserTypeEnum].
 class LoginResponseDtoUserTypeEnumTypeTransformer {
-  factory LoginResponseDtoUserTypeEnumTypeTransformer() => _instance ??= const LoginResponseDtoUserTypeEnumTypeTransformer._();
+  factory LoginResponseDtoUserTypeEnumTypeTransformer() =>
+      _instance ??= const LoginResponseDtoUserTypeEnumTypeTransformer._();
 
   const LoginResponseDtoUserTypeEnumTypeTransformer._();
 
@@ -183,9 +199,12 @@ class LoginResponseDtoUserTypeEnumTypeTransformer {
   LoginResponseDtoUserTypeEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'user': return LoginResponseDtoUserTypeEnum.user;
-        case r'driver': return LoginResponseDtoUserTypeEnum.driver;
-        case r'admin': return LoginResponseDtoUserTypeEnum.admin;
+        case r'user':
+          return LoginResponseDtoUserTypeEnum.user;
+        case r'driver':
+          return LoginResponseDtoUserTypeEnum.driver;
+        case r'admin':
+          return LoginResponseDtoUserTypeEnum.admin;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -198,5 +217,3 @@ class LoginResponseDtoUserTypeEnumTypeTransformer {
   /// Singleton [LoginResponseDtoUserTypeEnumTypeTransformer] instance.
   static LoginResponseDtoUserTypeEnumTypeTransformer? _instance;
 }
-
-

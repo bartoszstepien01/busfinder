@@ -7,13 +7,15 @@ class LocationSelector extends StatelessWidget {
   final LatLng? initialPosition;
 
   const LocationSelector({
-    super.key, 
+    super.key,
     required this.mapController,
-    this.initialPosition
+    this.initialPosition,
   });
 
   @override
   Widget build(BuildContext context) {
+    const maptilerKey = String.fromEnvironment('MAPTILER_KEY');
+
     return Stack(
       children: [
         FlutterMap(
@@ -24,20 +26,15 @@ class LocationSelector extends StatelessWidget {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+              urlTemplate: 'https://api.maptiler.com/maps/openstreetmap/{z}/{x}/{y}.jpg?key=$maptilerKey',
             ),
           ],
         ),
-        
+
         Center(
           child: Transform.translate(
             offset: const Offset(0, -20),
-            child: const Icon(
-              Icons.location_pin,
-              size: 40,
-              color: Colors.red,
-            ),
+            child: const Icon(Icons.location_pin, size: 40, color: Colors.red),
           ),
         ),
       ],

@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class BusRouteControllerApi {
-  BusRouteControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  BusRouteControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,7 +20,9 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [CreateBusRouteDto] createBusRouteDto (required):
-  Future<Response> createRouteWithHttpInfo(CreateBusRouteDto createBusRouteDto,) async {
+  Future<Response> createRouteWithHttpInfo(
+    CreateBusRouteDto createBusRouteDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/route/create';
 
@@ -33,7 +35,6 @@ class BusRouteControllerApi {
 
     const contentTypes = <String>['application/json'];
 
-
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -48,17 +49,24 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [CreateBusRouteDto] createBusRouteDto (required):
-  Future<ApiResponseDtoBusRouteResponseDto?> createRoute(CreateBusRouteDto createBusRouteDto,) async {
-    final response = await createRouteWithHttpInfo(createBusRouteDto,);
+  Future<ApiResponseDtoBusRouteResponseDto?> createRoute(
+    CreateBusRouteDto createBusRouteDto,
+  ) async {
+    final response = await createRouteWithHttpInfo(
+      createBusRouteDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoBusRouteResponseDto',) as ApiResponseDtoBusRouteResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoBusRouteResponseDto',
+      ) as ApiResponseDtoBusRouteResponseDto;
     }
     return null;
   }
@@ -67,7 +75,9 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [DeleteBusRouteDto] deleteBusRouteDto (required):
-  Future<Response> deleteRouteWithHttpInfo(DeleteBusRouteDto deleteBusRouteDto,) async {
+  Future<Response> deleteRouteWithHttpInfo(
+    DeleteBusRouteDto deleteBusRouteDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/route/delete';
 
@@ -80,7 +90,6 @@ class BusRouteControllerApi {
 
     const contentTypes = <String>['application/json'];
 
-
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -95,17 +104,24 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [DeleteBusRouteDto] deleteBusRouteDto (required):
-  Future<ApiResponseDtoVoid?> deleteRoute(DeleteBusRouteDto deleteBusRouteDto,) async {
-    final response = await deleteRouteWithHttpInfo(deleteBusRouteDto,);
+  Future<ApiResponseDtoVoid?> deleteRoute(
+    DeleteBusRouteDto deleteBusRouteDto,
+  ) async {
+    final response = await deleteRouteWithHttpInfo(
+      deleteBusRouteDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoVoid',) as ApiResponseDtoVoid;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoVoid',
+      ) as ApiResponseDtoVoid;
     }
     return null;
   }
@@ -114,7 +130,9 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [EditBusRouteDto] editBusRouteDto (required):
-  Future<Response> editRouteWithHttpInfo(EditBusRouteDto editBusRouteDto,) async {
+  Future<Response> editRouteWithHttpInfo(
+    EditBusRouteDto editBusRouteDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/route/edit';
 
@@ -126,7 +144,6 @@ class BusRouteControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -142,17 +159,24 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [EditBusRouteDto] editBusRouteDto (required):
-  Future<ApiResponseDtoBusRouteResponseDto?> editRoute(EditBusRouteDto editBusRouteDto,) async {
-    final response = await editRouteWithHttpInfo(editBusRouteDto,);
+  Future<ApiResponseDtoBusRouteResponseDto?> editRoute(
+    EditBusRouteDto editBusRouteDto,
+  ) async {
+    final response = await editRouteWithHttpInfo(
+      editBusRouteDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoBusRouteResponseDto',) as ApiResponseDtoBusRouteResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoBusRouteResponseDto',
+      ) as ApiResponseDtoBusRouteResponseDto;
     }
     return null;
   }
@@ -170,7 +194,6 @@ class BusRouteControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -191,9 +214,12 @@ class BusRouteControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoListBusRouteResponseShortDto',) as ApiResponseDtoListBusRouteResponseShortDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoListBusRouteResponseShortDto',
+      ) as ApiResponseDtoListBusRouteResponseShortDto;
     }
     return null;
   }
@@ -202,7 +228,9 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<Response> getRouteWithHttpInfo(String id,) async {
+  Future<Response> getRouteWithHttpInfo(
+    String id,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/route/';
 
@@ -213,10 +241,9 @@ class BusRouteControllerApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-      queryParams.addAll(_queryParams('', 'id', id));
+    queryParams.addAll(_queryParams('', 'id', id));
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -232,17 +259,24 @@ class BusRouteControllerApi {
   /// Parameters:
   ///
   /// * [String] id (required):
-  Future<ApiResponseDtoBusRouteResponseDto?> getRoute(String id,) async {
-    final response = await getRouteWithHttpInfo(id,);
+  Future<ApiResponseDtoBusRouteResponseDto?> getRoute(
+    String id,
+  ) async {
+    final response = await getRouteWithHttpInfo(
+      id,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoBusRouteResponseDto',) as ApiResponseDtoBusRouteResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoBusRouteResponseDto',
+      ) as ApiResponseDtoBusRouteResponseDto;
     }
     return null;
   }

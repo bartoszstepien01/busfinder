@@ -31,20 +31,21 @@ class EditRouteVariantDto {
   List<String> busStopIds;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is EditRouteVariantDto &&
-    other.id == id &&
-    other.name == name &&
-    _deepEquality.equals(other.busStopIds, busStopIds);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EditRouteVariantDto &&
+          other.id == id &&
+          other.name == name &&
+          _deepEquality.equals(other.busStopIds, busStopIds);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (name.hashCode) +
-    (busStopIds.hashCode);
+      // ignore: unnecessary_parenthesis
+      (id == null ? 0 : id!.hashCode) + (name.hashCode) + (busStopIds.hashCode);
 
   @override
-  String toString() => 'EditRouteVariantDto[id=$id, name=$name, busStopIds=$busStopIds]';
+  String toString() =>
+      'EditRouteVariantDto[id=$id, name=$name, busStopIds=$busStopIds]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -53,8 +54,8 @@ class EditRouteVariantDto {
     } else {
       json[r'id'] = null;
     }
-      json[r'name'] = this.name;
-      json[r'busStopIds'] = this.busStopIds;
+    json[r'name'] = this.name;
+    json[r'busStopIds'] = this.busStopIds;
     return json;
   }
 
@@ -70,8 +71,10 @@ class EditRouteVariantDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "EditRouteVariantDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "EditRouteVariantDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "EditRouteVariantDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "EditRouteVariantDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -80,14 +83,19 @@ class EditRouteVariantDto {
         id: mapValueOfType<String>(json, r'id'),
         name: mapValueOfType<String>(json, r'name')!,
         busStopIds: json[r'busStopIds'] is Iterable
-            ? (json[r'busStopIds'] as Iterable).cast<String>().toList(growable: false)
+            ? (json[r'busStopIds'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
             : const [],
       );
     }
     return null;
   }
 
-  static List<EditRouteVariantDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<EditRouteVariantDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <EditRouteVariantDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -115,13 +123,19 @@ class EditRouteVariantDto {
   }
 
   // maps a json object with a list of EditRouteVariantDto-objects as value to a dart map
-  static Map<String, List<EditRouteVariantDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<EditRouteVariantDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<EditRouteVariantDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = EditRouteVariantDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = EditRouteVariantDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -132,4 +146,3 @@ class EditRouteVariantDto {
     'name',
   };
 }
-

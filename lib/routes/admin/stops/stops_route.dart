@@ -1,8 +1,9 @@
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/confirm_delete_dialog.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/widgets/confirm_delete_dialog.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
+import 'package:busfinder/widgets/responsive_container.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -63,64 +64,71 @@ class _StopsRouteState extends State<StopsRoute> {
       appBar: AppBar(title: Text(localizations.stops)),
       body: _isLoading
           ? const LoadingIndicator()
-          : ListView.builder(
-              itemCount: _stops.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: const Icon(Icons.location_pin),
-                title: Text(_stops[index].name),
-                trailing: InkWell(
-                  child: Icon(Icons.delete),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => ConfirmDeleteDialog(
-                      content: localizations
-                          .areYouSureDeleteStop(_stops[index].name),
-                      onConfirm: () async {
-                        final api = context.read<ApiService>();
-                        final stops = BusStopControllerApi(api.client);
-                        final payload = DeleteBusStopDto(id: _stops[index].id);
+          : ResponsiveContainer(
+              child: ListView.builder(
+                itemCount: _stops.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: const Icon(Icons.location_pin),
+                  title: Text(_stops[index].name),
+                  trailing: InkWell(
+                    child: Icon(Icons.delete),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => ConfirmDeleteDialog(
+                        content: localizations.areYouSureDeleteStop(
+                          _stops[index].name,
+                        ),
+                        onConfirm: () async {
+                          final api = context.read<ApiService>();
+                          final stops = BusStopControllerApi(api.client);
+                          final payload = DeleteBusStopDto(
+                            id: _stops[index].id,
+                          );
 
-                        try {
-                          await stops.deleteBusStop(payload);
-                          if (context.mounted) {
-                            setState(() {
-                              _stops.removeAt(index);
-                            });
+                          try {
+                            await stops.deleteBusStop(payload);
+                            if (context.mounted) {
+                              setState(() {
+                                _stops.removeAt(index);
+                              });
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ErrorDialog.show(context, e);
+                            }
                           }
-                        } catch (e) {
-                          if (context.mounted) {
-                            ErrorDialog.show(context, e);
-                          }
-                        }
-                      },
+                        },
+                      ),
                     ),
                   ),
-                ),
-                onTap: () async {
-                  final updatedStop = await context.push<BusStopResponseDto>(
-                    '/admin/stops/edit',
-                    extra: {
-                      'busStop': BusStopResponseDto(
-                        id: _stops[index].id,
-                        name: _stops[index].name,
-                        location: LocationDto(
-                          longitude: _stops[index].location.longitude,
-                          latitude: _stops[index].location.latitude,
+                  onTap: () async {
+                    final updatedStop = await context.push<BusStopResponseDto>(
+                      '/admin/stops/edit',
+                      extra: {
+                        'busStop': BusStopResponseDto(
+                          id: _stops[index].id,
+                          name: _stops[index].name,
+                          location: LocationDto(
+                            longitude: _stops[index].location.longitude,
+                            latitude: _stops[index].location.latitude,
+                          ),
                         ),
-                      ),
-                    },
-                  );
-                  if (updatedStop != null) {
-                    setState(() {
-                      _stops[index] = updatedStop;
-                    });
-                  }
-                },
+                      },
+                    );
+                    if (updatedStop != null) {
+                      setState(() {
+                        _stops[index] = updatedStop;
+                      });
+                    }
+                  },
+                ),
               ),
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final newStop = await context.push<BusStopResponseDto>('/admin/stops/add');
+          final newStop = await context.push<BusStopResponseDto>(
+            '/admin/stops/add',
+          );
           if (newStop != null) {
             setState(() {
               _stops.add(newStop);

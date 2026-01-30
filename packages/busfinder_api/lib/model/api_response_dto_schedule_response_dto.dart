@@ -37,24 +37,27 @@ class ApiResponseDtoScheduleResponseDto {
   String? error;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ApiResponseDtoScheduleResponseDto &&
-    other.success == success &&
-    other.data == data &&
-    other.error == error;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiResponseDtoScheduleResponseDto &&
+          other.success == success &&
+          other.data == data &&
+          other.error == error;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (success.hashCode) +
-    (data == null ? 0 : data!.hashCode) +
-    (error == null ? 0 : error!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (success.hashCode) +
+      (data == null ? 0 : data!.hashCode) +
+      (error == null ? 0 : error!.hashCode);
 
   @override
-  String toString() => 'ApiResponseDtoScheduleResponseDto[success=$success, data=$data, error=$error]';
+  String toString() =>
+      'ApiResponseDtoScheduleResponseDto[success=$success, data=$data, error=$error]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'success'] = this.success;
+    json[r'success'] = this.success;
     if (this.data != null) {
       json[r'data'] = this.data;
     } else {
@@ -80,8 +83,10 @@ class ApiResponseDtoScheduleResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ApiResponseDtoScheduleResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ApiResponseDtoScheduleResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ApiResponseDtoScheduleResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ApiResponseDtoScheduleResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -95,7 +100,10 @@ class ApiResponseDtoScheduleResponseDto {
     return null;
   }
 
-  static List<ApiResponseDtoScheduleResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ApiResponseDtoScheduleResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ApiResponseDtoScheduleResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -108,7 +116,8 @@ class ApiResponseDtoScheduleResponseDto {
     return result.toList(growable: growable);
   }
 
-  static Map<String, ApiResponseDtoScheduleResponseDto> mapFromJson(dynamic json) {
+  static Map<String, ApiResponseDtoScheduleResponseDto> mapFromJson(
+      dynamic json) {
     final map = <String, ApiResponseDtoScheduleResponseDto>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
@@ -123,13 +132,19 @@ class ApiResponseDtoScheduleResponseDto {
   }
 
   // maps a json object with a list of ApiResponseDtoScheduleResponseDto-objects as value to a dart map
-  static Map<String, List<ApiResponseDtoScheduleResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ApiResponseDtoScheduleResponseDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ApiResponseDtoScheduleResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ApiResponseDtoScheduleResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ApiResponseDtoScheduleResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -140,4 +155,3 @@ class ApiResponseDtoScheduleResponseDto {
     'success',
   };
 }
-

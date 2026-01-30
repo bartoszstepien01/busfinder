@@ -1,24 +1,21 @@
+//========================================//
+//                WARNING!                //
+//       🍝 SPAGHETTI CODE AHEAD! 🍝      //
+//========================================//
+
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-// --- View Model ---
+import 'package:busfinder/routes/bus_stop_timetable_route.dart';
 
 enum NodeStyle {
   standard,
-
-  // -- Outgoing (Standard -> Branch) --
   branchSplit,
   branchDeadEnd,
-
-  // -- Incoming (Branch -> Standard) --
-  branchMerge, // Vertical Top -> Dot, Curve Dot -> Main Bottom
-  branchHeadStart, // Vertical Dot -> Bottom (Start of a multi-node incoming branch)
-  branchHeadSingle, // NO Vertical line above, Curve Dot -> Main Bottom (FIXED)
-  // -- Both --
+  branchMerge,
+  branchHeadStart,
+  branchHeadSingle,
   branchSplitAndMerge,
-
-  // -- Middle / Continuity --
   branchMiddle,
   branchTailEnd,
 }
@@ -37,10 +34,9 @@ class TimelineNode {
   });
 }
 
-// --- The Widget ---
-
 class BusRouteTimeline extends StatefulWidget {
   final List<RouteVariantResponseDto> variants;
+  final List<RouteVariantResponseDto> allVariants;
   final List<BusStopResponseDto> busStops;
   final List<ScheduleResponseDto> schedules;
   final String busRouteId;
@@ -48,6 +44,7 @@ class BusRouteTimeline extends StatefulWidget {
   const BusRouteTimeline({
     super.key,
     required this.variants,
+    required this.allVariants,
     required this.busStops,
     required this.schedules,
     required this.busRouteId,
@@ -59,7 +56,6 @@ class BusRouteTimeline extends StatefulWidget {
 
 class _BusRouteTimelineState extends State<BusRouteTimeline> {
   List<TimelineNode> _nodes = [];
-  final Color _backgroundColor = const Color(0xFF1E1E1E);
 
   @override
   void initState() {
@@ -81,8 +77,10 @@ class _BusRouteTimelineState extends State<BusRouteTimeline> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      color: _backgroundColor,
+      color: theme.colorScheme.surface,
       child: ListView.builder(
         itemCount: _nodes.length,
         itemBuilder: (context, index) {
@@ -92,13 +90,13 @@ class _BusRouteTimelineState extends State<BusRouteTimeline> {
           return InkWell(
             onTap: () => context.push(
               '/timetable',
-              extra: {
-                'schedules': widget.schedules,
-                'busStopName': node.stopName,
-                'busStopId': node.stopId,
-                'busRouteId': widget.busRouteId,
-                'variants': widget.variants,
-              },
+              extra: BusStopTimetableArguments(
+                schedules: widget.schedules,
+                busStopName: node.stopName,
+                busStopId: node.stopId,
+                busRouteId: widget.busRouteId,
+                variants: widget.allVariants,
+              ),
             ),
             child: IntrinsicHeight(
               child: Row(
@@ -111,7 +109,8 @@ class _BusRouteTimelineState extends State<BusRouteTimeline> {
                         style: node.style,
                         isLast: isLast,
                         maintainStandardLine: node.maintainStandardLine,
-                        backgroundColor: _backgroundColor,
+                        nodeColor: theme.colorScheme.onSurface,
+                        backgroundColor: theme.colorScheme.surface,
                       ),
                     ),
                   ),
@@ -123,7 +122,7 @@ class _BusRouteTimelineState extends State<BusRouteTimeline> {
                         child: Text(
                           node.stopName,
                           style: TextStyle(
-                            color: Colors.grey[200],
+                            color: theme.colorScheme.onSurface,
                             fontSize: 14,
                             fontWeight: node.style == NodeStyle.standard
                                 ? FontWeight.w600
@@ -143,12 +142,11 @@ class _BusRouteTimelineState extends State<BusRouteTimeline> {
   }
 }
 
-// --- The Painter ---
-
 class RouteLinePainter extends CustomPainter {
   final NodeStyle style;
   final bool isLast;
   final bool maintainStandardLine;
+  final Color nodeColor;
   final Color backgroundColor;
 
   static const double mainX = 24.0;
@@ -159,6 +157,7 @@ class RouteLinePainter extends CustomPainter {
     required this.style,
     required this.isLast,
     required this.maintainStandardLine,
+    required this.nodeColor,
     required this.backgroundColor,
   });
 
@@ -167,53 +166,40 @@ class RouteLinePainter extends CustomPainter {
     final centerY = size.height / 2;
 
     final paintMain = Paint()
-      ..color = Colors.white
+      ..color = nodeColor
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
     final paintBranch = Paint()
-      ..color = Colors.grey
+      ..color = nodeColor.withAlpha(97)
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
-    // --- 1. Draw Vertical Tracks ---
-
-    // A. Main Track (White)
     if (maintainStandardLine) {
       double bottomY = size.height;
       if (isLast) bottomY = centerY;
       canvas.drawLine(Offset(mainX, 0), Offset(mainX, bottomY), paintMain);
     }
 
-    // B. Branch Track (Grey)
     if (style != NodeStyle.standard) {
       double topY = 0;
       double bottomY = size.height;
 
-      // START LOGIC (Top -> Center)
-      // These styles start a line from the top of the cell:
       if (style == NodeStyle.branchMerge ||
           style == NodeStyle.branchMiddle ||
           style == NodeStyle.branchTailEnd) {
-        // Default is 0, so this draws Top -> ...
       } else {
-        // These styles start at the Dot (Center):
-        // Split, DeadEnd, HeadStart, HeadSingle
         topY = centerY;
       }
 
-      // END LOGIC (Center -> Bottom)
-      // These styles stop the line at the Dot (Center):
       if (style == NodeStyle.branchMerge ||
           style == NodeStyle.branchSplitAndMerge ||
           style == NodeStyle.branchDeadEnd ||
           style == NodeStyle.branchTailEnd ||
           style == NodeStyle.branchHeadSingle) {
-        // <--- FIXED: Single head stops at dot
         bottomY = centerY;
       }
 
-      // Draw if there is length
       if (bottomY > topY) {
         canvas.drawLine(
           Offset(branchX, topY),
@@ -223,9 +209,6 @@ class RouteLinePainter extends CustomPainter {
       }
     }
 
-    // --- 2. Draw Curves ---
-
-    // A. OUTGOING: Standard -> Branch
     if (style == NodeStyle.branchSplit ||
         style == NodeStyle.branchSplitAndMerge ||
         style == NodeStyle.branchDeadEnd) {
@@ -242,12 +225,9 @@ class RouteLinePainter extends CustomPainter {
       canvas.drawPath(path, paintBranch);
     }
 
-    // B. INCOMING: Branch -> Standard
-    // Applies to: Merge, SplitAndMerge, HeadSingle
     if (style == NodeStyle.branchMerge ||
         style == NodeStyle.branchSplitAndMerge ||
         style == NodeStyle.branchHeadSingle) {
-      // <--- FIXED: Single head gets the curve
       final path = Path();
       path.moveTo(branchX, centerY);
       path.cubicTo(
@@ -261,17 +241,15 @@ class RouteLinePainter extends CustomPainter {
       canvas.drawPath(path, paintBranch);
     }
 
-    // --- 3. Dots ---
-
     double dotX = (style == NodeStyle.standard) ? mainX : branchX;
 
     Paint dotStrokeInfo = (style == NodeStyle.standard)
         ? (Paint()
-            ..color = Colors.white
+            ..color = nodeColor
             ..style = PaintingStyle.stroke
             ..strokeWidth = 2.5)
         : (Paint()
-            ..color = Colors.grey
+            ..color = nodeColor.withAlpha(97)
             ..style = PaintingStyle.stroke
             ..strokeWidth = 2.5);
 
@@ -286,8 +264,6 @@ class RouteLinePainter extends CustomPainter {
   bool shouldRepaint(RouteLinePainter oldDelegate) => true;
 }
 
-// --- The Logic Helper ---
-
 class TimelineBuilder {
   static List<TimelineNode> buildViewNodes(
     List<RouteVariantResponseDto> variants,
@@ -296,7 +272,6 @@ class TimelineBuilder {
     final stopMap = {for (var s in busStops) s.id: s.name};
     List<TimelineNode> result = [];
 
-    // 1. Identify Standard vs Others
     final standardVariant = variants.firstWhere(
       (v) => v.standard,
       orElse: () => variants.first,
@@ -309,7 +284,7 @@ class TimelineBuilder {
       return standardIds
           .map(
             (id) => TimelineNode(
-              stopName: stopMap[id] ?? 'Unknown',
+              stopName: stopMap[id] ?? '',
               stopId: id,
               style: NodeStyle.standard,
             ),
@@ -319,13 +294,9 @@ class TimelineBuilder {
 
     Set<String> processedStops = {};
 
-    // 2. Iterate the Standard Spine
     for (int i = 0; i < standardIds.length; i++) {
       final stdStopId = standardIds[i];
 
-      // ============================================================
-      // CHECK A: Incoming Head Branches (Sequences merging IN)
-      // ============================================================
       for (final variant in otherVariants) {
         final branchIds = variant.busStops;
         int idxInBranch = branchIds.indexOf(stdStopId);
@@ -335,7 +306,6 @@ class TimelineBuilder {
           String prevStdStop = (i > 0) ? standardIds[i - 1] : "";
 
           if (prevBranchStop != prevStdStop) {
-            // Found incoming chain
             List<String> headStops = [];
             int k = idxInBranch - 1;
             while (k >= 0) {
@@ -351,15 +321,16 @@ class TimelineBuilder {
                 if (headStops.length == 1) {
                   style = NodeStyle.branchHeadSingle;
                 } else {
-                  if (h == 0)
+                  if (h == 0) {
                     style = NodeStyle.branchHeadStart;
-                  else if (h == headStops.length - 1)
+                  } else if (h == headStops.length - 1) {
                     style = NodeStyle.branchMerge;
+                  }
                 }
 
                 result.add(
                   TimelineNode(
-                    stopName: stopMap[headStops[h]] ?? 'Branch',
+                    stopName: stopMap[headStops[h]] ?? '',
                     stopId: headStops[h],
                     style: style,
                     maintainStandardLine: i > 0,
@@ -372,18 +343,13 @@ class TimelineBuilder {
         }
       }
 
-      // ============================================================
-      // EXTRA CHECK: Variant Ends Exactly Here (Dead End at Standard)
-      // ============================================================
       for (final variant in otherVariants) {
         final index = variant.busStops.indexOf(stdStopId);
         if (index == variant.busStops.length - 1 &&
             i != standardIds.length - 1) {
-          // This variant ends exactly at this standard stop.
-          // We add a visual indicator *before* the standard node.
           result.add(
             TimelineNode(
-              stopName: stopMap[stdStopId] ?? 'Unknown',
+              stopName: stopMap[stdStopId] ?? '',
               stopId: stdStopId,
               style: NodeStyle.branchDeadEnd,
             ),
@@ -391,29 +357,21 @@ class TimelineBuilder {
         }
       }
 
-      // ============================================================
-      // Step B: Add the Standard Node
-      // ============================================================
       result.add(
         TimelineNode(
-          stopName: stopMap[stdStopId] ?? 'Unknown',
+          stopName: stopMap[stdStopId] ?? '',
           stopId: stdStopId,
           style: NodeStyle.standard,
         ),
       );
       processedStops.add(stdStopId);
 
-      // ============================================================
-      // EXTRA CHECK: Variant Starts Exactly Here (Split at Standard)
-      // ============================================================
       for (final variant in otherVariants) {
         final index = variant.busStops.indexOf(stdStopId);
         if (index == 0 && i != index) {
-          // This variant starts exactly at this standard stop.
-          // We add a visual indicator *after* the standard node.
           result.add(
             TimelineNode(
-              stopName: stopMap[stdStopId] ?? 'Unknown',
+              stopName: stopMap[stdStopId] ?? '',
               stopId: stdStopId,
               style: NodeStyle.branchHeadSingle,
             ),
@@ -421,9 +379,6 @@ class TimelineBuilder {
         }
       }
 
-      // ============================================================
-      // CHECK C: Outgoing Branches (Sequences Splitting OUT)
-      // ============================================================
       for (final variant in otherVariants) {
         final branchIds = variant.busStops;
         int idxInBranch = branchIds.indexOf(stdStopId);
@@ -459,25 +414,27 @@ class TimelineBuilder {
                   if (detourStops.length == 1) {
                     style = NodeStyle.branchSplitAndMerge;
                   } else {
-                    if (d == 0)
+                    if (d == 0) {
                       style = NodeStyle.branchSplit;
-                    else if (d == detourStops.length - 1)
+                    } else if (d == detourStops.length - 1) {
                       style = NodeStyle.branchMerge;
+                    }
                   }
                 } else {
                   if (detourStops.length == 1) {
                     style = NodeStyle.branchDeadEnd;
                   } else {
-                    if (d == 0)
+                    if (d == 0) {
                       style = NodeStyle.branchSplit;
-                    else if (d == detourStops.length - 1)
+                    } else if (d == detourStops.length - 1) {
                       style = NodeStyle.branchTailEnd;
+                    }
                   }
                 }
 
                 result.add(
                   TimelineNode(
-                    stopName: stopMap[stopId] ?? 'Detour',
+                    stopName: stopMap[stopId] ?? '',
                     stopId: stopId,
                     style: style,
                     maintainStandardLine: !isTail,

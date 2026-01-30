@@ -1,7 +1,11 @@
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/confirm_delete_dialog.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/l10n/app_localizations.dart';
+import 'package:busfinder/widgets/confirm_delete_dialog.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
+import 'package:busfinder/widgets/responsive_container.dart';
+import 'package:busfinder/routes/admin/schedules/widgets/schedules_filter.dart';
+import 'package:busfinder/routes/admin/schedules/widgets/schedule_list_item.dart';
 
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +27,6 @@ class _SchedulesRouteState extends State<SchedulesRoute> {
   // Filters
   String? _selectedRouteId;
   String? _selectedDayType;
-
-  static const List<String> dayTypes = [
-    'workday',
-    'saturday',
-    'sunday',
-    'holiday',
-    'special',
-  ];
 
   @override
   void initState() {
@@ -75,7 +71,7 @@ class _SchedulesRouteState extends State<SchedulesRoute> {
 
       if (response != null) {
         setState(() {
-          _schedules = response.data.toList(); 
+          _schedules = response.data.toList();
           _isLoading = false;
         });
       }
@@ -91,7 +87,8 @@ class _SchedulesRouteState extends State<SchedulesRoute> {
       if (_selectedRouteId != null && schedule.routeId != _selectedRouteId) {
         return false;
       }
-      if (_selectedDayType != null && schedule.dayType.value != _selectedDayType) {
+      if (_selectedDayType != null &&
+          schedule.dayType.value != _selectedDayType) {
         return false;
       }
       return true;
@@ -99,30 +96,36 @@ class _SchedulesRouteState extends State<SchedulesRoute> {
   }
 
   String _getDayTypeLabel(String dayType) {
+    final localizations = AppLocalizations.of(context)!;
+
     switch (dayType) {
       case 'workday':
-        return 'Workday';
+        return localizations.workday;
       case 'saturday':
-        return 'Saturday';
+        return localizations.saturday;
       case 'sunday':
-        return 'Sunday';
+        return localizations.sunday;
       case 'holiday':
-        return 'Holiday';
+        return localizations.holiday;
       case 'special':
-        return 'Special';
+        return localizations.special;
       default:
         return dayType;
     }
   }
 
   void _deleteSchedule(ScheduleResponseDto schedule) {
-    final route = _routes.where((element) => element.id == schedule.routeId).firstOrNull;
+    final localizations = AppLocalizations.of(context)!;
+    final route = _routes
+        .where((element) => element.id == schedule.routeId)
+        .firstOrNull;
 
     showDialog(
       context: context,
       builder: (context) => ConfirmDeleteDialog(
-        content:
-            'Are you sure you want to delete the ${route?.name} (${_getDayTypeLabel(schedule.dayType.value)}) schedule?',
+        content: localizations.areYouSureDeleteSchedule(
+          '${route?.name} (${_getDayTypeLabel(schedule.dayType.value)}',
+        ),
         onConfirm: () async {
           final api = context.read<ApiService>();
           final schedulesApi = ScheduleControllerApi(api.client);
@@ -138,7 +141,7 @@ class _SchedulesRouteState extends State<SchedulesRoute> {
               });
             }
           } catch (e) {
-            if (mounted) {
+            if (context.mounted) {
               ErrorDialog.show(context, e);
             }
           }
@@ -149,142 +152,75 @@ class _SchedulesRouteState extends State<SchedulesRoute> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Schedules')),
+      appBar: AppBar(title: Text(localizations.schedules)),
       body: _isLoading
           ? const LoadingIndicator()
-          : Column(
-              children: [
-                // Filters
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: DropdownButtonFormField<String?>(
-                          initialValue: _selectedRouteId,
-                          decoration: const InputDecoration(
-                            labelText: 'Bus Route',
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                          ),
-                          items: [
-                            const DropdownMenuItem<String?>(
-                              value: null,
-                              child: Text('All routes'),
-                            ),
-                            ..._routes.map(
-                              (route) => DropdownMenuItem<String?>(
-                                value: route.id,
-                                child: Text(route.name),
-                              ),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedRouteId = value;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: DropdownButtonFormField<String?>(
-                          initialValue: _selectedDayType,
-                          decoration: const InputDecoration(
-                            labelText: 'Day Type',
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                          ),
-                          items: [
-                            const DropdownMenuItem<String?>(
-                              value: null,
-                              child: Text('All types'),
-                            ),
-                            ...dayTypes.map(
-                              (type) => DropdownMenuItem<String?>(
-                                value: type,
-                                child: Text(_getDayTypeLabel(type)),
-                              ),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedDayType = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+          : ResponsiveContainer(
+              child: Column(
+                children: [
+                  SchedulesFilter(
+                    routes: _routes,
+                    selectedRouteId: _selectedRouteId,
+                    selectedDayType: _selectedDayType,
+                    onRouteChanged: (value) {
+                      setState(() {
+                        _selectedRouteId = value;
+                      });
+                    },
+                    onDayTypeChanged: (value) {
+                      setState(() {
+                        _selectedDayType = value;
+                      });
+                    },
                   ),
-                ),
-                const Divider(height: 1),
-                // Schedule list
-                Expanded(
-                  child: _filteredSchedules.isEmpty
-                      ? Center(
-                          child: Text(
-                            'No schedules found',
-                            style: Theme.of(context).textTheme.bodyLarge,
+                  const Divider(height: 1),
+                  Expanded(
+                    child: _filteredSchedules.isEmpty
+                        ? Center(
+                            child: Text(
+                              localizations.noSchedules,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: _filteredSchedules.length,
+                            itemBuilder: (context, index) {
+                              final schedule = _filteredSchedules[index];
+                              final route = _routes
+                                  .where(
+                                    (element) => element.id == schedule.routeId,
+                                  )
+                                  .firstOrNull;
+                              return ScheduleListItem(
+                                schedule: schedule,
+                                routeName: route?.name ?? '',
+                                onEdit: () async {
+                                  final result = await context
+                                      .push<ScheduleResponseDto>(
+                                        '/admin/schedules/edit',
+                                        extra: {'schedule': schedule},
+                                      );
+                                  if (result != null) {
+                                    setState(() {
+                                      final idx = _schedules.indexWhere(
+                                        (s) => s.id == result.id,
+                                      );
+                                      if (idx != -1) {
+                                        _schedules[idx] = result;
+                                      }
+                                    });
+                                  }
+                                },
+                                onDelete: () => _deleteSchedule(schedule),
+                              );
+                            },
                           ),
-                        )
-                      : ListView.builder(
-                          itemCount: _filteredSchedules.length,
-                          itemBuilder: (context, index) {
-                            final schedule = _filteredSchedules[index];
-                            final route = _routes.where((element) => element.id == schedule.routeId).firstOrNull;
-                            return Card(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              child: ListTile(
-                                leading: const Icon(Icons.schedule),
-                                title: Text(route?.name ?? 'Unknown'),
-                                subtitle: Text(
-                                  '${_getDayTypeLabel(schedule.dayType.value)} • ${schedule.timetable.length} stops',
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () async {
-                                        final result = await context
-                                            .push<ScheduleResponseDto>(
-                                          '/admin/schedules/edit',
-                                          extra: {'schedule': schedule},
-                                        );
-                                        if (result != null) {
-                                          setState(() {
-                                            final idx = _schedules.indexWhere(
-                                              (s) => s.id == result.id,
-                                            );
-                                            if (idx != -1) {
-                                              _schedules[idx] = result;
-                                            }
-                                          });
-                                        }
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () => _deleteSchedule(schedule),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class AuthenticationControllerApi {
-  AuthenticationControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  AuthenticationControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,7 +20,9 @@ class AuthenticationControllerApi {
   /// Parameters:
   ///
   /// * [LoginUserDto] loginUserDto (required):
-  Future<Response> authenticateWithHttpInfo(LoginUserDto loginUserDto,) async {
+  Future<Response> authenticateWithHttpInfo(
+    LoginUserDto loginUserDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/auth/login';
 
@@ -33,7 +35,6 @@ class AuthenticationControllerApi {
 
     const contentTypes = <String>['application/json'];
 
-
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -48,17 +49,24 @@ class AuthenticationControllerApi {
   /// Parameters:
   ///
   /// * [LoginUserDto] loginUserDto (required):
-  Future<ApiResponseDtoLoginResponseDto?> authenticate(LoginUserDto loginUserDto,) async {
-    final response = await authenticateWithHttpInfo(loginUserDto,);
+  Future<ApiResponseDtoLoginResponseDto?> authenticate(
+    LoginUserDto loginUserDto,
+  ) async {
+    final response = await authenticateWithHttpInfo(
+      loginUserDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoLoginResponseDto',) as ApiResponseDtoLoginResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoLoginResponseDto',
+      ) as ApiResponseDtoLoginResponseDto;
     }
     return null;
   }
@@ -67,7 +75,9 @@ class AuthenticationControllerApi {
   /// Parameters:
   ///
   /// * [RegisterUserDto] registerUserDto (required):
-  Future<Response> registerWithHttpInfo(RegisterUserDto registerUserDto,) async {
+  Future<Response> registerWithHttpInfo(
+    RegisterUserDto registerUserDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/auth/signup';
 
@@ -79,7 +89,6 @@ class AuthenticationControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -95,17 +104,24 @@ class AuthenticationControllerApi {
   /// Parameters:
   ///
   /// * [RegisterUserDto] registerUserDto (required):
-  Future<ApiResponseDtoLoginResponseDto?> register(RegisterUserDto registerUserDto,) async {
-    final response = await registerWithHttpInfo(registerUserDto,);
+  Future<ApiResponseDtoLoginResponseDto?> register(
+    RegisterUserDto registerUserDto,
+  ) async {
+    final response = await registerWithHttpInfo(
+      registerUserDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoLoginResponseDto',) as ApiResponseDtoLoginResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoLoginResponseDto',
+      ) as ApiResponseDtoLoginResponseDto;
     }
     return null;
   }

@@ -37,24 +37,27 @@ class ApiResponseDtoLoginResponseDto {
   String? error;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ApiResponseDtoLoginResponseDto &&
-    other.success == success &&
-    other.data == data &&
-    other.error == error;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiResponseDtoLoginResponseDto &&
+          other.success == success &&
+          other.data == data &&
+          other.error == error;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (success.hashCode) +
-    (data == null ? 0 : data!.hashCode) +
-    (error == null ? 0 : error!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (success.hashCode) +
+      (data == null ? 0 : data!.hashCode) +
+      (error == null ? 0 : error!.hashCode);
 
   @override
-  String toString() => 'ApiResponseDtoLoginResponseDto[success=$success, data=$data, error=$error]';
+  String toString() =>
+      'ApiResponseDtoLoginResponseDto[success=$success, data=$data, error=$error]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'success'] = this.success;
+    json[r'success'] = this.success;
     if (this.data != null) {
       json[r'data'] = this.data;
     } else {
@@ -80,8 +83,10 @@ class ApiResponseDtoLoginResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ApiResponseDtoLoginResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ApiResponseDtoLoginResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ApiResponseDtoLoginResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ApiResponseDtoLoginResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -95,7 +100,10 @@ class ApiResponseDtoLoginResponseDto {
     return null;
   }
 
-  static List<ApiResponseDtoLoginResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ApiResponseDtoLoginResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ApiResponseDtoLoginResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -123,13 +131,19 @@ class ApiResponseDtoLoginResponseDto {
   }
 
   // maps a json object with a list of ApiResponseDtoLoginResponseDto-objects as value to a dart map
-  static Map<String, List<ApiResponseDtoLoginResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ApiResponseDtoLoginResponseDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ApiResponseDtoLoginResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ApiResponseDtoLoginResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ApiResponseDtoLoginResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -140,4 +154,3 @@ class ApiResponseDtoLoginResponseDto {
     'success',
   };
 }
-

@@ -28,29 +28,32 @@ class RouteVariantResponseDto {
   List<String> busStops;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is RouteVariantResponseDto &&
-    other.id == id &&
-    other.name == name &&
-    other.standard == standard &&
-    _deepEquality.equals(other.busStops, busStops);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RouteVariantResponseDto &&
+          other.id == id &&
+          other.name == name &&
+          other.standard == standard &&
+          _deepEquality.equals(other.busStops, busStops);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id.hashCode) +
-    (name.hashCode) +
-    (standard.hashCode) +
-    (busStops.hashCode);
+      // ignore: unnecessary_parenthesis
+      (id.hashCode) +
+      (name.hashCode) +
+      (standard.hashCode) +
+      (busStops.hashCode);
 
   @override
-  String toString() => 'RouteVariantResponseDto[id=$id, name=$name, standard=$standard, busStops=$busStops]';
+  String toString() =>
+      'RouteVariantResponseDto[id=$id, name=$name, standard=$standard, busStops=$busStops]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'id'] = this.id;
-      json[r'name'] = this.name;
-      json[r'standard'] = this.standard;
-      json[r'busStops'] = this.busStops;
+    json[r'id'] = this.id;
+    json[r'name'] = this.name;
+    json[r'standard'] = this.standard;
+    json[r'busStops'] = this.busStops;
     return json;
   }
 
@@ -66,8 +69,10 @@ class RouteVariantResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "RouteVariantResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "RouteVariantResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "RouteVariantResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "RouteVariantResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -77,14 +82,19 @@ class RouteVariantResponseDto {
         name: mapValueOfType<String>(json, r'name')!,
         standard: mapValueOfType<bool>(json, r'standard')!,
         busStops: json[r'busStops'] is Iterable
-            ? (json[r'busStops'] as Iterable).cast<String>().toList(growable: false)
+            ? (json[r'busStops'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
             : const [],
       );
     }
     return null;
   }
 
-  static List<RouteVariantResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<RouteVariantResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <RouteVariantResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -112,13 +122,19 @@ class RouteVariantResponseDto {
   }
 
   // maps a json object with a list of RouteVariantResponseDto-objects as value to a dart map
-  static Map<String, List<RouteVariantResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<RouteVariantResponseDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<RouteVariantResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = RouteVariantResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = RouteVariantResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -132,4 +148,3 @@ class RouteVariantResponseDto {
     'busStops',
   };
 }
-

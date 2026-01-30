@@ -22,23 +22,22 @@ class BusRouteResponseShortDto {
   String name;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BusRouteResponseShortDto &&
-    other.id == id &&
-    other.name == name;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BusRouteResponseShortDto && other.id == id && other.name == name;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id.hashCode) +
-    (name.hashCode);
+      // ignore: unnecessary_parenthesis
+      (id.hashCode) + (name.hashCode);
 
   @override
   String toString() => 'BusRouteResponseShortDto[id=$id, name=$name]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'id'] = this.id;
-      json[r'name'] = this.name;
+    json[r'id'] = this.id;
+    json[r'name'] = this.name;
     return json;
   }
 
@@ -54,8 +53,10 @@ class BusRouteResponseShortDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "BusRouteResponseShortDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "BusRouteResponseShortDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "BusRouteResponseShortDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "BusRouteResponseShortDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -68,7 +69,10 @@ class BusRouteResponseShortDto {
     return null;
   }
 
-  static List<BusRouteResponseShortDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<BusRouteResponseShortDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <BusRouteResponseShortDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -96,13 +100,19 @@ class BusRouteResponseShortDto {
   }
 
   // maps a json object with a list of BusRouteResponseShortDto-objects as value to a dart map
-  static Map<String, List<BusRouteResponseShortDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<BusRouteResponseShortDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<BusRouteResponseShortDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = BusRouteResponseShortDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = BusRouteResponseShortDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -114,4 +124,3 @@ class BusRouteResponseShortDto {
     'name',
   };
 }
-

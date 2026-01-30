@@ -1,7 +1,7 @@
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/location_selector.dart';
-import 'package:busfinder/components/wizard_layout.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/location_selector.dart';
+import 'package:busfinder/widgets/wizard_layout.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
@@ -109,10 +109,7 @@ class _AddStopRouteState extends State<AddStopRoute> {
       },
       pages: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             children: [
               FormBuilderTextField(
@@ -131,13 +128,14 @@ class _AddStopRouteState extends State<AddStopRoute> {
         ),
         LocationSelector(
           mapController: _mapController,
-          initialPosition: LatLng(
-            widget.busStop?.location.longitude ?? 0,
-            widget.busStop?.location.latitude ?? 0,
-          ),
+          initialPosition: widget.busStop == null
+              ? null
+              : LatLng(
+                  widget.busStop?.location.longitude ?? 0,
+                  widget.busStop?.location.latitude ?? 0,
+                ),
         ),
       ],
     );
   }
 }
-

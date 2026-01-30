@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:busfinder/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class ErrorDialog extends StatelessWidget {
@@ -29,13 +30,15 @@ class ErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: const Text('Błąd'),
+      title: Text(localizations.error),
       content: Text(_getErrorMessage()),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('OK'),
+          child: Text(localizations.ok),
         ),
       ],
     );

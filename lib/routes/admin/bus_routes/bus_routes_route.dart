@@ -1,7 +1,9 @@
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/confirm_delete_dialog.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/l10n/app_localizations.dart';
+import 'package:busfinder/widgets/confirm_delete_dialog.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
+import 'package:busfinder/widgets/responsive_container.dart';
 
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
@@ -57,72 +59,79 @@ class _BusRoutesRouteState extends State<BusRoutesRoute> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Bus routes')),
+      appBar: AppBar(title: Text(localizations.busRoutes)),
       body: _isLoading
           ? const LoadingIndicator()
-          : ListView.builder(
-              itemCount: _routes.length,
-              itemBuilder: (context, index) {
-                final route = _routes[index];
-                return ListTile(
-                  leading: const Icon(Icons.directions_bus),
-                  title: Text(route.name),
-                  onTap: () async {
-                    final updatedRoute = await context
-                        .push<BusRouteResponseShortDto>(
-                          '/admin/routes/edit',
-                          extra: {
-                            'route': BusRouteResponseShortDto(
-                              id: route.id,
-                              name: route.name,
-                            ),
-                          },
-                        );
-                    if (updatedRoute != null) {
-                      setState(() {
-                        final index = _routes.indexWhere(
-                          (r) => r.id == updatedRoute.id,
-                        );
-                        if (index != -1) {
-                          _routes[index] = updatedRoute;
-                        }
-                      });
-                    }
-                  },
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => ConfirmDeleteDialog(
-                          content:
-                              'Are you sure you want to delete ${route.name}?',
-                          onConfirm: () async {
-                            final api = context.read<ApiService>();
-                            final routes = BusRouteControllerApi(api.client);
-
-                            try {
-                              await routes.deleteRoute(
-                                DeleteBusRouteDto(id: route.id),
-                              );
-                              if (context.mounted) {
-                                setState(() {
-                                  _routes.removeWhere((r) => r.id == route.id);
-                                });
-                              }
-                            } catch (e) {
-                              if (context.mounted) {
-                                ErrorDialog.show(context, e);
-                              }
-                            }
-                          },
-                        ),
-                      );
+          : ResponsiveContainer(
+              child: ListView.builder(
+                itemCount: _routes.length,
+                itemBuilder: (context, index) {
+                  final route = _routes[index];
+                  return ListTile(
+                    leading: const Icon(Icons.directions_bus),
+                    title: Text(route.name),
+                    onTap: () async {
+                      final updatedRoute = await context
+                          .push<BusRouteResponseShortDto>(
+                            '/admin/routes/edit',
+                            extra: {
+                              'route': BusRouteResponseShortDto(
+                                id: route.id,
+                                name: route.name,
+                              ),
+                            },
+                          );
+                      if (updatedRoute != null) {
+                        setState(() {
+                          final index = _routes.indexWhere(
+                            (r) => r.id == updatedRoute.id,
+                          );
+                          if (index != -1) {
+                            _routes[index] = updatedRoute;
+                          }
+                        });
+                      }
                     },
-                  ),
-                );
-              },
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => ConfirmDeleteDialog(
+                            content: localizations.areYouSureDeleteRoute(
+                              route.name,
+                            ),
+                            onConfirm: () async {
+                              final api = context.read<ApiService>();
+                              final routes = BusRouteControllerApi(api.client);
+
+                              try {
+                                await routes.deleteRoute(
+                                  DeleteBusRouteDto(id: route.id),
+                                );
+                                if (context.mounted) {
+                                  setState(() {
+                                    _routes.removeWhere(
+                                      (r) => r.id == route.id,
+                                    );
+                                  });
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ErrorDialog.show(context, e);
+                                }
+                              }
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

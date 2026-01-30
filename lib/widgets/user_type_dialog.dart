@@ -1,6 +1,6 @@
-import 'package:busfinder/api_service.dart';
+import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/bloc/authentication_state.dart';
-import 'package:busfinder/components/error_dialog.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,7 @@ class UserTypeDialog extends StatefulWidget {
 
 class _UserTypeDialogState extends State<UserTypeDialog> {
   late UserType _currentUserType;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -64,29 +65,48 @@ class _UserTypeDialogState extends State<UserTypeDialog> {
           child: Text(localizations.cancel),
         ),
         TextButton(
-          onPressed: () async {
-            final api = context.read<ApiService>();
-            final user = UserControllerApi(api.client);
-            final payload = ChangeUserTypeDto(
-              id: widget.userId,
-              type:
-                  ChangeUserTypeDtoTypeEnum.fromJson(_currentUserType.name) ??
-                  ChangeUserTypeDtoTypeEnum.user,
-            );
+          onPressed: _isLoading
+              ? null
+              : () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  final api = context.read<ApiService>();
+                  final user = UserControllerApi(api.client);
+                  final payload = ChangeUserTypeDto(
+                    id: widget.userId,
+                    type:
+                        ChangeUserTypeDtoTypeEnum.fromJson(
+                          _currentUserType.name,
+                        ) ??
+                        ChangeUserTypeDtoTypeEnum.user,
+                  );
 
-            try {
-              await user.setUserType(payload);
-            } catch (e) {
-              if (context.mounted) {
-                ErrorDialog.show(context, e);
-              }
-            }
+                  try {
+                    await user.setUserType(payload);
+                  } catch (e) {
+                    if (context.mounted) {
+                      ErrorDialog.show(context, e);
+                    }
+                  } finally {
+                    if (mounted) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                  }
 
-            if (context.mounted) {
-              Navigator.of(context).pop(_currentUserType);
-            }
-          },
-          child: Text(localizations.ok),
+                  if (context.mounted) {
+                    Navigator.of(context).pop(_currentUserType);
+                  }
+                },
+          child: _isLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(localizations.ok),
         ),
       ],
     );

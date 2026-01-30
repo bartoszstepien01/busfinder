@@ -6,9 +6,7 @@ class NotLoggedIn extends AuthenticationState {
   const NotLoggedIn();
 }
 
-enum UserType {
-  user, driver, admin
-}
+enum UserType { user, driver, admin }
 
 class LoggedIn extends AuthenticationState {
   const LoggedIn({required this.token, required this.userType});

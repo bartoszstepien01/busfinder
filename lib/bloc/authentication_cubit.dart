@@ -1,4 +1,4 @@
-import 'package:busfinder/api_service.dart';
+import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/bloc/authentication_state.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
@@ -40,23 +40,19 @@ class AuthenticationCubit extends HydratedCubit<AuthenticationState> {
 
     return LoggedIn(
       token: json['token'],
-      userType: UserType.values[json['userType']]
+      userType: UserType.values[json['userType']],
     );
   }
 
   @override
   Map<String, dynamic>? toJson(AuthenticationState state) {
     return switch (state) {
-      NotLoggedIn() => {
-        'loggedIn': false,
-        'token': null,
-        'userType': null
-      },
+      NotLoggedIn() => {'loggedIn': false, 'token': null, 'userType': null},
       final LoggedIn loggedInState => {
         'loggedIn': true,
         'token': loggedInState.token,
-        'userType': loggedInState.userType.index
-      }
+        'userType': loggedInState.userType.index,
+      },
     };
   }
 }

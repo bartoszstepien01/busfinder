@@ -31,25 +31,28 @@ class ApiResponseDtoListScheduleResponseDto {
   String? error;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ApiResponseDtoListScheduleResponseDto &&
-    other.success == success &&
-    _deepEquality.equals(other.data, data) &&
-    other.error == error;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiResponseDtoListScheduleResponseDto &&
+          other.success == success &&
+          _deepEquality.equals(other.data, data) &&
+          other.error == error;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (success.hashCode) +
-    (data.hashCode) +
-    (error == null ? 0 : error!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (success.hashCode) +
+      (data.hashCode) +
+      (error == null ? 0 : error!.hashCode);
 
   @override
-  String toString() => 'ApiResponseDtoListScheduleResponseDto[success=$success, data=$data, error=$error]';
+  String toString() =>
+      'ApiResponseDtoListScheduleResponseDto[success=$success, data=$data, error=$error]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'success'] = this.success;
-      json[r'data'] = this.data;
+    json[r'success'] = this.success;
+    json[r'data'] = this.data;
     if (this.error != null) {
       json[r'error'] = this.error;
     } else {
@@ -70,8 +73,10 @@ class ApiResponseDtoListScheduleResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ApiResponseDtoListScheduleResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ApiResponseDtoListScheduleResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ApiResponseDtoListScheduleResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ApiResponseDtoListScheduleResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -85,7 +90,10 @@ class ApiResponseDtoListScheduleResponseDto {
     return null;
   }
 
-  static List<ApiResponseDtoListScheduleResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ApiResponseDtoListScheduleResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ApiResponseDtoListScheduleResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -98,12 +106,14 @@ class ApiResponseDtoListScheduleResponseDto {
     return result.toList(growable: growable);
   }
 
-  static Map<String, ApiResponseDtoListScheduleResponseDto> mapFromJson(dynamic json) {
+  static Map<String, ApiResponseDtoListScheduleResponseDto> mapFromJson(
+      dynamic json) {
     final map = <String, ApiResponseDtoListScheduleResponseDto>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = ApiResponseDtoListScheduleResponseDto.fromJson(entry.value);
+        final value =
+            ApiResponseDtoListScheduleResponseDto.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -113,13 +123,20 @@ class ApiResponseDtoListScheduleResponseDto {
   }
 
   // maps a json object with a list of ApiResponseDtoListScheduleResponseDto-objects as value to a dart map
-  static Map<String, List<ApiResponseDtoListScheduleResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ApiResponseDtoListScheduleResponseDto>>
+      mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ApiResponseDtoListScheduleResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ApiResponseDtoListScheduleResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ApiResponseDtoListScheduleResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -130,4 +147,3 @@ class ApiResponseDtoListScheduleResponseDto {
     'success',
   };
 }
-

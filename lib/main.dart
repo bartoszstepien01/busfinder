@@ -1,4 +1,4 @@
-import 'package:busfinder/api_service.dart';
+import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/bloc/authentication_cubit.dart';
 import 'package:busfinder/bloc/authentication_state.dart';
 import 'package:busfinder/bloc/go_router_refresh_stream.dart';
@@ -22,28 +22,43 @@ import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:go_router/go_router.dart';
+import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'l10n/app_localizations.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:busfinder/bloc/settings_cubit.dart';
+import 'package:busfinder/bloc/settings_state.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final apiService = ApiService(ApiClient());
+  const apiUrl = String.fromEnvironment('API_URL');
+
+  final apiService = ApiService(
+    ApiClient(basePath: 'https://$apiUrl'),
+    StompClient(config: StompConfig(url: 'wss://$apiUrl/location')),
+  );
 
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorageDirectory.web
-        : HydratedStorageDirectory((await getTemporaryDirectory()).path),
+        : HydratedStorageDirectory((await getApplicationDocumentsDirectory()).path),
   );
 
   runApp(
     MultiRepositoryProvider(
       providers: [RepositoryProvider<ApiService>.value(value: apiService)],
-      child: BlocProvider(
-        create: (context) => AuthenticationCubit(context.read<ApiService>()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                AuthenticationCubit(context.read<ApiService>()),
+          ),
+          BlocProvider(create: (context) => SettingsCubit()),
+        ],
         child: BusFinderApp(),
       ),
     ),
@@ -89,11 +104,7 @@ class BusFinderApp extends StatelessWidget {
         GoRoute(
           path: '/timetable',
           builder: (context, state) => BusStopTimetableRoute(
-            busStopId: (state.extra as Map<String, dynamic>)['busStopId'],
-            schedules: (state.extra as Map<String, dynamic>)['schedules'],
-            busStopName: (state.extra as Map<String, dynamic>)['busStopName'],
-            busRouteId: (state.extra as Map<String, dynamic>)['busRouteId'],
-            variants: (state.extra as Map<String, dynamic>)['variants'],
+            args: state.extra as BusStopTimetableArguments,
           ),
         ),
         GoRoute(
@@ -153,20 +164,31 @@ class BusFinderApp extends StatelessWidget {
       ],
     );
 
-    return MaterialApp.router(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.dark,
-        ),
-      ),
-      localizationsDelegates: [
-        ...AppLocalizations.localizationsDelegates,
-        FormBuilderLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      routerConfig: router,
-      //locale: Locale('en'),
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return MaterialApp.router(
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              brightness: Brightness.light,
+            ),
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              brightness: Brightness.dark,
+            ),
+          ),
+          themeMode: state.themeMode,
+          localizationsDelegates: [
+            ...AppLocalizations.localizationsDelegates,
+            FormBuilderLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+          locale: state.locale,
+        );
+      },
     );
   }
 }

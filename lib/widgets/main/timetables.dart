@@ -1,20 +1,20 @@
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/bus_route_entry.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/widgets/bus_route_entry.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class BusRoutesList extends StatefulWidget {
-  const BusRoutesList({super.key});
+class Timetables extends StatefulWidget {
+  const Timetables({super.key});
 
   @override
-  State<BusRoutesList> createState() => _BusRoutesListState();
+  State<Timetables> createState() => _TimetablesState();
 }
 
-class _BusRoutesListState extends State<BusRoutesList> {
+class _TimetablesState extends State<Timetables> {
   bool _isLoading = true;
   late List<BusRouteResponseShortDto> _routes;
 

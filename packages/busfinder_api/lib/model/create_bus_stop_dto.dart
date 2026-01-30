@@ -28,15 +28,16 @@ class CreateBusStopDto {
   LocationDto location;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is CreateBusStopDto &&
-    other.name == name &&
-    other.location == location;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CreateBusStopDto &&
+          other.name == name &&
+          other.location == location;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (name == null ? 0 : name!.hashCode) +
-    (location.hashCode);
+      // ignore: unnecessary_parenthesis
+      (name == null ? 0 : name!.hashCode) + (location.hashCode);
 
   @override
   String toString() => 'CreateBusStopDto[name=$name, location=$location]';
@@ -48,7 +49,7 @@ class CreateBusStopDto {
     } else {
       json[r'name'] = null;
     }
-      json[r'location'] = this.location;
+    json[r'location'] = this.location;
     return json;
   }
 
@@ -64,8 +65,10 @@ class CreateBusStopDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "CreateBusStopDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "CreateBusStopDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "CreateBusStopDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "CreateBusStopDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -78,7 +81,10 @@ class CreateBusStopDto {
     return null;
   }
 
-  static List<CreateBusStopDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<CreateBusStopDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <CreateBusStopDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -106,13 +112,19 @@ class CreateBusStopDto {
   }
 
   // maps a json object with a list of CreateBusStopDto-objects as value to a dart map
-  static Map<String, List<CreateBusStopDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<CreateBusStopDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<CreateBusStopDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = CreateBusStopDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = CreateBusStopDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -123,4 +135,3 @@ class CreateBusStopDto {
     'location',
   };
 }
-

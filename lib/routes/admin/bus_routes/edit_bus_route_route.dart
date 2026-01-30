@@ -1,7 +1,8 @@
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
-import 'package:busfinder/components/wizard_layout.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/l10n/app_localizations.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
+import 'package:busfinder/widgets/wizard_layout.dart';
 
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
@@ -56,21 +57,23 @@ class _EditBusRouteRouteState extends State<EditBusRouteRoute> {
     final payload = EditBusRouteDto(
       id: widget.busRoute.id,
       name: name,
-      variants: _route.variants.map((e) => EditRouteVariantDto(
-        id: e.id,
-        name: e.name,
-        busStopIds: e.busStops
-      )).toList()
+      variants: _route.variants
+          .map(
+            (e) => EditRouteVariantDto(
+              id: e.id,
+              name: e.name,
+              busStopIds: e.busStops,
+            ),
+          )
+          .toList(),
     );
 
     try {
       await routes.editRoute(payload);
       if (mounted) {
-        // Return the updated route to parent
-        context.pop(BusRouteResponseShortDto(
-          id: widget.busRoute.id,
-          name: name,
-        ));
+        context.pop(
+          BusRouteResponseShortDto(id: widget.busRoute.id, name: name),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -117,15 +120,17 @@ class _EditBusRouteRouteState extends State<EditBusRouteRoute> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Edit Route')),
+        appBar: AppBar(title: Text(localizations.editRoute)),
         body: const LoadingIndicator(),
       );
     }
 
     return WizardLayout(
-      title: 'Edit Route',
+      title: localizations.editRoute,
       formKey: _formKey,
       pageController: _pageViewController,
       onNext: () {
@@ -141,78 +146,79 @@ class _EditBusRouteRouteState extends State<EditBusRouteRoute> {
       onSave: _saveRoute,
       pages: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             children: [
               FormBuilderTextField(
                 name: 'name',
                 initialValue: _route.name,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   icon: Icon(Icons.label),
-                  labelText: 'Route name',
+                  labelText: localizations.routeName,
                 ),
                 validator: FormBuilderValidators.required(),
               ),
             ],
           ),
         ),
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsetsGeometry.directional(start: 5),
-                  child: Text(
-                    'Variants',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: _addVariant,
-                ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _route.variants.length,
-                itemBuilder: (context, index) {
-                  final variant = _route.variants[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(
-                        variant.standard
-                            ? 'Standard'
-                            : variant.name,
-                      ),
-                      subtitle: Text(
-                        '${variant.busStops.length} stops',
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () => _editVariant(variant),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: variant.standard
-                                ? null
-                                : () => _deleteVariant(variant),
-                          ),
-                        ],
-                      ),
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsGeometry.directional(start: 8),
+                    child: Text(
+                      localizations.variants,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                  );
-                },
+                  ),
+
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: _addVariant,
+                  ),
+                ],
               ),
-            ),
-          ],
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _route.variants.length,
+                  itemBuilder: (context, index) {
+                    final variant = _route.variants[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(
+                          variant.standard
+                              ? localizations.standard
+                              : variant.name,
+                        ),
+                        subtitle: Text(
+                          localizations.nStops(variant.busStops.length),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => _editVariant(variant),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: variant.standard
+                                  ? null
+                                  : () => _deleteVariant(variant),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

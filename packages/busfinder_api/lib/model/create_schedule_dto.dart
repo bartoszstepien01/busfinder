@@ -25,26 +25,27 @@ class CreateScheduleDto {
   Map<String, List<BusArrivalDto>> timetable;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is CreateScheduleDto &&
-    other.routeId == routeId &&
-    other.dayType == dayType &&
-    _deepEquality.equals(other.timetable, timetable);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CreateScheduleDto &&
+          other.routeId == routeId &&
+          other.dayType == dayType &&
+          _deepEquality.equals(other.timetable, timetable);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (routeId.hashCode) +
-    (dayType.hashCode) +
-    (timetable.hashCode);
+      // ignore: unnecessary_parenthesis
+      (routeId.hashCode) + (dayType.hashCode) + (timetable.hashCode);
 
   @override
-  String toString() => 'CreateScheduleDto[routeId=$routeId, dayType=$dayType, timetable=$timetable]';
+  String toString() =>
+      'CreateScheduleDto[routeId=$routeId, dayType=$dayType, timetable=$timetable]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'routeId'] = this.routeId;
-      json[r'dayType'] = this.dayType;
-      json[r'timetable'] = this.timetable;
+    json[r'routeId'] = this.routeId;
+    json[r'dayType'] = this.dayType;
+    json[r'timetable'] = this.timetable;
     return json;
   }
 
@@ -60,8 +61,10 @@ class CreateScheduleDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "CreateScheduleDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "CreateScheduleDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "CreateScheduleDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "CreateScheduleDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -70,14 +73,17 @@ class CreateScheduleDto {
         routeId: mapValueOfType<String>(json, r'routeId')!,
         dayType: CreateScheduleDtoDayTypeEnum.fromJson(json[r'dayType'])!,
         timetable: json[r'timetable'] == null
-          ? const {}
+            ? const {}
             : BusArrivalDto.mapListFromJson(json[r'timetable']),
       );
     }
     return null;
   }
 
-  static List<CreateScheduleDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<CreateScheduleDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <CreateScheduleDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -105,13 +111,19 @@ class CreateScheduleDto {
   }
 
   // maps a json object with a list of CreateScheduleDto-objects as value to a dart map
-  static Map<String, List<CreateScheduleDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<CreateScheduleDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<CreateScheduleDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = CreateScheduleDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = CreateScheduleDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -124,7 +136,6 @@ class CreateScheduleDto {
     'timetable',
   };
 }
-
 
 class CreateScheduleDtoDayTypeEnum {
   /// Instantiate a new enum with the provided [value].
@@ -153,9 +164,13 @@ class CreateScheduleDtoDayTypeEnum {
     special,
   ];
 
-  static CreateScheduleDtoDayTypeEnum? fromJson(dynamic value) => CreateScheduleDtoDayTypeEnumTypeTransformer().decode(value);
+  static CreateScheduleDtoDayTypeEnum? fromJson(dynamic value) =>
+      CreateScheduleDtoDayTypeEnumTypeTransformer().decode(value);
 
-  static List<CreateScheduleDtoDayTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<CreateScheduleDtoDayTypeEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <CreateScheduleDtoDayTypeEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -172,7 +187,8 @@ class CreateScheduleDtoDayTypeEnum {
 /// Transformation class that can [encode] an instance of [CreateScheduleDtoDayTypeEnum] to String,
 /// and [decode] dynamic data back to [CreateScheduleDtoDayTypeEnum].
 class CreateScheduleDtoDayTypeEnumTypeTransformer {
-  factory CreateScheduleDtoDayTypeEnumTypeTransformer() => _instance ??= const CreateScheduleDtoDayTypeEnumTypeTransformer._();
+  factory CreateScheduleDtoDayTypeEnumTypeTransformer() =>
+      _instance ??= const CreateScheduleDtoDayTypeEnumTypeTransformer._();
 
   const CreateScheduleDtoDayTypeEnumTypeTransformer._();
 
@@ -189,11 +205,16 @@ class CreateScheduleDtoDayTypeEnumTypeTransformer {
   CreateScheduleDtoDayTypeEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'workday': return CreateScheduleDtoDayTypeEnum.workday;
-        case r'saturday': return CreateScheduleDtoDayTypeEnum.saturday;
-        case r'sunday': return CreateScheduleDtoDayTypeEnum.sunday;
-        case r'holiday': return CreateScheduleDtoDayTypeEnum.holiday;
-        case r'special': return CreateScheduleDtoDayTypeEnum.special;
+        case r'workday':
+          return CreateScheduleDtoDayTypeEnum.workday;
+        case r'saturday':
+          return CreateScheduleDtoDayTypeEnum.saturday;
+        case r'sunday':
+          return CreateScheduleDtoDayTypeEnum.sunday;
+        case r'holiday':
+          return CreateScheduleDtoDayTypeEnum.holiday;
+        case r'special':
+          return CreateScheduleDtoDayTypeEnum.special;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -206,5 +227,3 @@ class CreateScheduleDtoDayTypeEnumTypeTransformer {
   /// Singleton [CreateScheduleDtoDayTypeEnumTypeTransformer] instance.
   static CreateScheduleDtoDayTypeEnumTypeTransformer? _instance;
 }
-
-

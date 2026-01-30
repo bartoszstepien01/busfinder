@@ -25,26 +25,27 @@ class BusArrivalDto {
   String routeVariantId;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BusArrivalDto &&
-    other.time == time &&
-    other.courseNumber == courseNumber &&
-    other.routeVariantId == routeVariantId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BusArrivalDto &&
+          other.time == time &&
+          other.courseNumber == courseNumber &&
+          other.routeVariantId == routeVariantId;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (time.hashCode) +
-    (courseNumber.hashCode) +
-    (routeVariantId.hashCode);
+      // ignore: unnecessary_parenthesis
+      (time.hashCode) + (courseNumber.hashCode) + (routeVariantId.hashCode);
 
   @override
-  String toString() => 'BusArrivalDto[time=$time, courseNumber=$courseNumber, routeVariantId=$routeVariantId]';
+  String toString() =>
+      'BusArrivalDto[time=$time, courseNumber=$courseNumber, routeVariantId=$routeVariantId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'time'] = this.time;
-      json[r'courseNumber'] = this.courseNumber;
-      json[r'routeVariantId'] = this.routeVariantId;
+    json[r'time'] = this.time;
+    json[r'courseNumber'] = this.courseNumber;
+    json[r'routeVariantId'] = this.routeVariantId;
     return json;
   }
 
@@ -60,8 +61,10 @@ class BusArrivalDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "BusArrivalDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "BusArrivalDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "BusArrivalDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "BusArrivalDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -75,7 +78,10 @@ class BusArrivalDto {
     return null;
   }
 
-  static List<BusArrivalDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<BusArrivalDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <BusArrivalDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -103,13 +109,19 @@ class BusArrivalDto {
   }
 
   // maps a json object with a list of BusArrivalDto-objects as value to a dart map
-  static Map<String, List<BusArrivalDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<BusArrivalDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<BusArrivalDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = BusArrivalDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = BusArrivalDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -122,4 +134,3 @@ class BusArrivalDto {
     'routeVariantId',
   };
 }
-

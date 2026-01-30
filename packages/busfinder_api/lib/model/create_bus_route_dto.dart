@@ -28,15 +28,16 @@ class CreateBusRouteDto {
   List<String> busStops;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is CreateBusRouteDto &&
-    other.name == name &&
-    _deepEquality.equals(other.busStops, busStops);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CreateBusRouteDto &&
+          other.name == name &&
+          _deepEquality.equals(other.busStops, busStops);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (name == null ? 0 : name!.hashCode) +
-    (busStops.hashCode);
+      // ignore: unnecessary_parenthesis
+      (name == null ? 0 : name!.hashCode) + (busStops.hashCode);
 
   @override
   String toString() => 'CreateBusRouteDto[name=$name, busStops=$busStops]';
@@ -48,7 +49,7 @@ class CreateBusRouteDto {
     } else {
       json[r'name'] = null;
     }
-      json[r'busStops'] = this.busStops;
+    json[r'busStops'] = this.busStops;
     return json;
   }
 
@@ -64,8 +65,10 @@ class CreateBusRouteDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "CreateBusRouteDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "CreateBusRouteDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "CreateBusRouteDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "CreateBusRouteDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -73,14 +76,19 @@ class CreateBusRouteDto {
       return CreateBusRouteDto(
         name: mapValueOfType<String>(json, r'name'),
         busStops: json[r'busStops'] is Iterable
-            ? (json[r'busStops'] as Iterable).cast<String>().toList(growable: false)
+            ? (json[r'busStops'] as Iterable)
+                .cast<String>()
+                .toList(growable: false)
             : const [],
       );
     }
     return null;
   }
 
-  static List<CreateBusRouteDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<CreateBusRouteDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <CreateBusRouteDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -108,20 +116,24 @@ class CreateBusRouteDto {
   }
 
   // maps a json object with a list of CreateBusRouteDto-objects as value to a dart map
-  static Map<String, List<CreateBusRouteDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<CreateBusRouteDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<CreateBusRouteDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = CreateBusRouteDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = CreateBusRouteDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{
-  };
+  static const requiredKeys = <String>{};
 }
-

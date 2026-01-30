@@ -28,29 +28,32 @@ class ScheduleResponseDto {
   Map<String, List<BusArrivalDto>> timetable;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ScheduleResponseDto &&
-    other.id == id &&
-    other.routeId == routeId &&
-    other.dayType == dayType &&
-    _deepEquality.equals(other.timetable, timetable);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ScheduleResponseDto &&
+          other.id == id &&
+          other.routeId == routeId &&
+          other.dayType == dayType &&
+          _deepEquality.equals(other.timetable, timetable);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id.hashCode) +
-    (routeId.hashCode) +
-    (dayType.hashCode) +
-    (timetable.hashCode);
+      // ignore: unnecessary_parenthesis
+      (id.hashCode) +
+      (routeId.hashCode) +
+      (dayType.hashCode) +
+      (timetable.hashCode);
 
   @override
-  String toString() => 'ScheduleResponseDto[id=$id, routeId=$routeId, dayType=$dayType, timetable=$timetable]';
+  String toString() =>
+      'ScheduleResponseDto[id=$id, routeId=$routeId, dayType=$dayType, timetable=$timetable]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'id'] = this.id;
-      json[r'routeId'] = this.routeId;
-      json[r'dayType'] = this.dayType;
-      json[r'timetable'] = this.timetable;
+    json[r'id'] = this.id;
+    json[r'routeId'] = this.routeId;
+    json[r'dayType'] = this.dayType;
+    json[r'timetable'] = this.timetable;
     return json;
   }
 
@@ -66,8 +69,10 @@ class ScheduleResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ScheduleResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ScheduleResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ScheduleResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ScheduleResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -77,14 +82,17 @@ class ScheduleResponseDto {
         routeId: mapValueOfType<String>(json, r'routeId')!,
         dayType: ScheduleResponseDtoDayTypeEnum.fromJson(json[r'dayType'])!,
         timetable: json[r'timetable'] == null
-          ? const {}
+            ? const {}
             : BusArrivalDto.mapListFromJson(json[r'timetable']),
       );
     }
     return null;
   }
 
-  static List<ScheduleResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ScheduleResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ScheduleResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -112,13 +120,19 @@ class ScheduleResponseDto {
   }
 
   // maps a json object with a list of ScheduleResponseDto-objects as value to a dart map
-  static Map<String, List<ScheduleResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ScheduleResponseDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ScheduleResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ScheduleResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ScheduleResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -132,7 +146,6 @@ class ScheduleResponseDto {
     'timetable',
   };
 }
-
 
 class ScheduleResponseDtoDayTypeEnum {
   /// Instantiate a new enum with the provided [value].
@@ -161,9 +174,13 @@ class ScheduleResponseDtoDayTypeEnum {
     special,
   ];
 
-  static ScheduleResponseDtoDayTypeEnum? fromJson(dynamic value) => ScheduleResponseDtoDayTypeEnumTypeTransformer().decode(value);
+  static ScheduleResponseDtoDayTypeEnum? fromJson(dynamic value) =>
+      ScheduleResponseDtoDayTypeEnumTypeTransformer().decode(value);
 
-  static List<ScheduleResponseDtoDayTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ScheduleResponseDtoDayTypeEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ScheduleResponseDtoDayTypeEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -180,7 +197,8 @@ class ScheduleResponseDtoDayTypeEnum {
 /// Transformation class that can [encode] an instance of [ScheduleResponseDtoDayTypeEnum] to String,
 /// and [decode] dynamic data back to [ScheduleResponseDtoDayTypeEnum].
 class ScheduleResponseDtoDayTypeEnumTypeTransformer {
-  factory ScheduleResponseDtoDayTypeEnumTypeTransformer() => _instance ??= const ScheduleResponseDtoDayTypeEnumTypeTransformer._();
+  factory ScheduleResponseDtoDayTypeEnumTypeTransformer() =>
+      _instance ??= const ScheduleResponseDtoDayTypeEnumTypeTransformer._();
 
   const ScheduleResponseDtoDayTypeEnumTypeTransformer._();
 
@@ -194,14 +212,20 @@ class ScheduleResponseDtoDayTypeEnumTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  ScheduleResponseDtoDayTypeEnum? decode(dynamic data, {bool allowNull = true}) {
+  ScheduleResponseDtoDayTypeEnum? decode(dynamic data,
+      {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'workday': return ScheduleResponseDtoDayTypeEnum.workday;
-        case r'saturday': return ScheduleResponseDtoDayTypeEnum.saturday;
-        case r'sunday': return ScheduleResponseDtoDayTypeEnum.sunday;
-        case r'holiday': return ScheduleResponseDtoDayTypeEnum.holiday;
-        case r'special': return ScheduleResponseDtoDayTypeEnum.special;
+        case r'workday':
+          return ScheduleResponseDtoDayTypeEnum.workday;
+        case r'saturday':
+          return ScheduleResponseDtoDayTypeEnum.saturday;
+        case r'sunday':
+          return ScheduleResponseDtoDayTypeEnum.sunday;
+        case r'holiday':
+          return ScheduleResponseDtoDayTypeEnum.holiday;
+        case r'special':
+          return ScheduleResponseDtoDayTypeEnum.special;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -214,5 +238,3 @@ class ScheduleResponseDtoDayTypeEnumTypeTransformer {
   /// Singleton [ScheduleResponseDtoDayTypeEnumTypeTransformer] instance.
   static ScheduleResponseDtoDayTypeEnumTypeTransformer? _instance;
 }
-
-

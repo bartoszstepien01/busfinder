@@ -22,23 +22,22 @@ class ChangeUserTypeDto {
   ChangeUserTypeDtoTypeEnum type;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ChangeUserTypeDto &&
-    other.id == id &&
-    other.type == type;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ChangeUserTypeDto && other.id == id && other.type == type;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (id.hashCode) +
-    (type.hashCode);
+      // ignore: unnecessary_parenthesis
+      (id.hashCode) + (type.hashCode);
 
   @override
   String toString() => 'ChangeUserTypeDto[id=$id, type=$type]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'id'] = this.id;
-      json[r'type'] = this.type;
+    json[r'id'] = this.id;
+    json[r'type'] = this.type;
     return json;
   }
 
@@ -54,8 +53,10 @@ class ChangeUserTypeDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ChangeUserTypeDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ChangeUserTypeDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ChangeUserTypeDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ChangeUserTypeDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -68,7 +69,10 @@ class ChangeUserTypeDto {
     return null;
   }
 
-  static List<ChangeUserTypeDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ChangeUserTypeDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ChangeUserTypeDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -96,13 +100,19 @@ class ChangeUserTypeDto {
   }
 
   // maps a json object with a list of ChangeUserTypeDto-objects as value to a dart map
-  static Map<String, List<ChangeUserTypeDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ChangeUserTypeDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ChangeUserTypeDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ChangeUserTypeDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ChangeUserTypeDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -114,7 +124,6 @@ class ChangeUserTypeDto {
     'type',
   };
 }
-
 
 class ChangeUserTypeDtoTypeEnum {
   /// Instantiate a new enum with the provided [value].
@@ -139,9 +148,13 @@ class ChangeUserTypeDtoTypeEnum {
     admin,
   ];
 
-  static ChangeUserTypeDtoTypeEnum? fromJson(dynamic value) => ChangeUserTypeDtoTypeEnumTypeTransformer().decode(value);
+  static ChangeUserTypeDtoTypeEnum? fromJson(dynamic value) =>
+      ChangeUserTypeDtoTypeEnumTypeTransformer().decode(value);
 
-  static List<ChangeUserTypeDtoTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ChangeUserTypeDtoTypeEnum> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ChangeUserTypeDtoTypeEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -158,7 +171,8 @@ class ChangeUserTypeDtoTypeEnum {
 /// Transformation class that can [encode] an instance of [ChangeUserTypeDtoTypeEnum] to String,
 /// and [decode] dynamic data back to [ChangeUserTypeDtoTypeEnum].
 class ChangeUserTypeDtoTypeEnumTypeTransformer {
-  factory ChangeUserTypeDtoTypeEnumTypeTransformer() => _instance ??= const ChangeUserTypeDtoTypeEnumTypeTransformer._();
+  factory ChangeUserTypeDtoTypeEnumTypeTransformer() =>
+      _instance ??= const ChangeUserTypeDtoTypeEnumTypeTransformer._();
 
   const ChangeUserTypeDtoTypeEnumTypeTransformer._();
 
@@ -175,9 +189,12 @@ class ChangeUserTypeDtoTypeEnumTypeTransformer {
   ChangeUserTypeDtoTypeEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'user': return ChangeUserTypeDtoTypeEnum.user;
-        case r'driver': return ChangeUserTypeDtoTypeEnum.driver;
-        case r'admin': return ChangeUserTypeDtoTypeEnum.admin;
+        case r'user':
+          return ChangeUserTypeDtoTypeEnum.user;
+        case r'driver':
+          return ChangeUserTypeDtoTypeEnum.driver;
+        case r'admin':
+          return ChangeUserTypeDtoTypeEnum.admin;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -190,5 +207,3 @@ class ChangeUserTypeDtoTypeEnumTypeTransformer {
   /// Singleton [ChangeUserTypeDtoTypeEnumTypeTransformer] instance.
   static ChangeUserTypeDtoTypeEnumTypeTransformer? _instance;
 }
-
-

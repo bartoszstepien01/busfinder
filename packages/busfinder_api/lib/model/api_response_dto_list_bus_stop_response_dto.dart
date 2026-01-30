@@ -31,25 +31,28 @@ class ApiResponseDtoListBusStopResponseDto {
   String? error;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ApiResponseDtoListBusStopResponseDto &&
-    other.success == success &&
-    _deepEquality.equals(other.data, data) &&
-    other.error == error;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiResponseDtoListBusStopResponseDto &&
+          other.success == success &&
+          _deepEquality.equals(other.data, data) &&
+          other.error == error;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (success.hashCode) +
-    (data.hashCode) +
-    (error == null ? 0 : error!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (success.hashCode) +
+      (data.hashCode) +
+      (error == null ? 0 : error!.hashCode);
 
   @override
-  String toString() => 'ApiResponseDtoListBusStopResponseDto[success=$success, data=$data, error=$error]';
+  String toString() =>
+      'ApiResponseDtoListBusStopResponseDto[success=$success, data=$data, error=$error]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'success'] = this.success;
-      json[r'data'] = this.data;
+    json[r'success'] = this.success;
+    json[r'data'] = this.data;
     if (this.error != null) {
       json[r'error'] = this.error;
     } else {
@@ -70,8 +73,10 @@ class ApiResponseDtoListBusStopResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ApiResponseDtoListBusStopResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ApiResponseDtoListBusStopResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ApiResponseDtoListBusStopResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ApiResponseDtoListBusStopResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -85,7 +90,10 @@ class ApiResponseDtoListBusStopResponseDto {
     return null;
   }
 
-  static List<ApiResponseDtoListBusStopResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ApiResponseDtoListBusStopResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ApiResponseDtoListBusStopResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -98,12 +106,14 @@ class ApiResponseDtoListBusStopResponseDto {
     return result.toList(growable: growable);
   }
 
-  static Map<String, ApiResponseDtoListBusStopResponseDto> mapFromJson(dynamic json) {
+  static Map<String, ApiResponseDtoListBusStopResponseDto> mapFromJson(
+      dynamic json) {
     final map = <String, ApiResponseDtoListBusStopResponseDto>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = ApiResponseDtoListBusStopResponseDto.fromJson(entry.value);
+        final value =
+            ApiResponseDtoListBusStopResponseDto.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -113,13 +123,20 @@ class ApiResponseDtoListBusStopResponseDto {
   }
 
   // maps a json object with a list of ApiResponseDtoListBusStopResponseDto-objects as value to a dart map
-  static Map<String, List<ApiResponseDtoListBusStopResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ApiResponseDtoListBusStopResponseDto>>
+      mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ApiResponseDtoListBusStopResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ApiResponseDtoListBusStopResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ApiResponseDtoListBusStopResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -130,4 +147,3 @@ class ApiResponseDtoListBusStopResponseDto {
     'success',
   };
 }
-

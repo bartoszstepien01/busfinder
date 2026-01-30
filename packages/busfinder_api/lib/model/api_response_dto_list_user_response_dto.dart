@@ -31,25 +31,28 @@ class ApiResponseDtoListUserResponseDto {
   String? error;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ApiResponseDtoListUserResponseDto &&
-    other.success == success &&
-    _deepEquality.equals(other.data, data) &&
-    other.error == error;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiResponseDtoListUserResponseDto &&
+          other.success == success &&
+          _deepEquality.equals(other.data, data) &&
+          other.error == error;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (success.hashCode) +
-    (data.hashCode) +
-    (error == null ? 0 : error!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (success.hashCode) +
+      (data.hashCode) +
+      (error == null ? 0 : error!.hashCode);
 
   @override
-  String toString() => 'ApiResponseDtoListUserResponseDto[success=$success, data=$data, error=$error]';
+  String toString() =>
+      'ApiResponseDtoListUserResponseDto[success=$success, data=$data, error=$error]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-      json[r'success'] = this.success;
-      json[r'data'] = this.data;
+    json[r'success'] = this.success;
+    json[r'data'] = this.data;
     if (this.error != null) {
       json[r'error'] = this.error;
     } else {
@@ -70,8 +73,10 @@ class ApiResponseDtoListUserResponseDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "ApiResponseDtoListUserResponseDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "ApiResponseDtoListUserResponseDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "ApiResponseDtoListUserResponseDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "ApiResponseDtoListUserResponseDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -85,7 +90,10 @@ class ApiResponseDtoListUserResponseDto {
     return null;
   }
 
-  static List<ApiResponseDtoListUserResponseDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ApiResponseDtoListUserResponseDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ApiResponseDtoListUserResponseDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -98,7 +106,8 @@ class ApiResponseDtoListUserResponseDto {
     return result.toList(growable: growable);
   }
 
-  static Map<String, ApiResponseDtoListUserResponseDto> mapFromJson(dynamic json) {
+  static Map<String, ApiResponseDtoListUserResponseDto> mapFromJson(
+      dynamic json) {
     final map = <String, ApiResponseDtoListUserResponseDto>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
@@ -113,13 +122,19 @@ class ApiResponseDtoListUserResponseDto {
   }
 
   // maps a json object with a list of ApiResponseDtoListUserResponseDto-objects as value to a dart map
-  static Map<String, List<ApiResponseDtoListUserResponseDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ApiResponseDtoListUserResponseDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ApiResponseDtoListUserResponseDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ApiResponseDtoListUserResponseDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ApiResponseDtoListUserResponseDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -130,4 +145,3 @@ class ApiResponseDtoListUserResponseDto {
     'success',
   };
 }
-

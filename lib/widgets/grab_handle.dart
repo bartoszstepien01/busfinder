@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GrabHandle extends StatelessWidget {
-  const GrabHandle();
+  const GrabHandle({super.key});
 
   @override
   Widget build(BuildContext context) {

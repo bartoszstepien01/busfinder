@@ -1,10 +1,11 @@
-import 'package:busfinder/api_service.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/l10n/app_localizations.dart';
 
-import 'package:busfinder/components/bus_stop_list.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
-import 'package:busfinder/components/stop_selection_dialog.dart';
-import 'package:busfinder/components/wizard_layout.dart';
+import 'package:busfinder/widgets/bus_stop_list.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
+import 'package:busfinder/widgets/stop_selection_dialog.dart';
+import 'package:busfinder/widgets/wizard_layout.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -59,14 +60,16 @@ class _AddBusRouteRouteState extends State<AddBusRouteRoute> {
     }
   }
 
-  void _saveRoute() async {
+  Future<void> _saveRoute() async {
     final name = _formKey.currentState?.fields['name']?.value as String;
     final api = context.read<ApiService>();
     final routes = BusRouteControllerApi(api.client);
 
     final payload = CreateBusRouteDto(
-        name: name, busStops: _selectedStops.map((e) => e.id).toList());
-    
+      name: name,
+      busStops: _selectedStops.map((e) => e.id).toList(),
+    );
+
     try {
       final response = await routes.createRoute(payload);
       if (mounted && response?.data != null) {
@@ -106,8 +109,10 @@ class _AddBusRouteRouteState extends State<AddBusRouteRoute> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return WizardLayout(
-      title: 'Add route',
+      title: localizations.addRoute,
       formKey: _formKey,
       pageController: _pageViewController,
       onNext: () {
@@ -123,17 +128,14 @@ class _AddBusRouteRouteState extends State<AddBusRouteRoute> {
       onSave: _saveRoute,
       pages: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             children: [
               FormBuilderTextField(
                 name: 'name',
                 decoration: InputDecoration(
                   icon: Icon(Icons.label),
-                  labelText: 'Bus route name',
+                  labelText: localizations.routeName,
                 ),
                 validator: FormBuilderValidators.required(),
               ),
@@ -143,21 +145,15 @@ class _AddBusRouteRouteState extends State<AddBusRouteRoute> {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Stops',
+                    localizations.stops,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: _addStop,
-                  ),
+                  IconButton(icon: const Icon(Icons.add), onPressed: _addStop),
                 ],
               ),
             ),

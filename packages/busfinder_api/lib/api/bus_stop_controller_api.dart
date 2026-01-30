@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class BusStopControllerApi {
-  BusStopControllerApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  BusStopControllerApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -20,7 +20,9 @@ class BusStopControllerApi {
   /// Parameters:
   ///
   /// * [CreateBusStopDto] createBusStopDto (required):
-  Future<Response> createBusStopWithHttpInfo(CreateBusStopDto createBusStopDto,) async {
+  Future<Response> createBusStopWithHttpInfo(
+    CreateBusStopDto createBusStopDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/stop/create';
 
@@ -33,7 +35,6 @@ class BusStopControllerApi {
 
     const contentTypes = <String>['application/json'];
 
-
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -48,17 +49,24 @@ class BusStopControllerApi {
   /// Parameters:
   ///
   /// * [CreateBusStopDto] createBusStopDto (required):
-  Future<ApiResponseDtoBusStopResponseDto?> createBusStop(CreateBusStopDto createBusStopDto,) async {
-    final response = await createBusStopWithHttpInfo(createBusStopDto,);
+  Future<ApiResponseDtoBusStopResponseDto?> createBusStop(
+    CreateBusStopDto createBusStopDto,
+  ) async {
+    final response = await createBusStopWithHttpInfo(
+      createBusStopDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoBusStopResponseDto',) as ApiResponseDtoBusStopResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoBusStopResponseDto',
+      ) as ApiResponseDtoBusStopResponseDto;
     }
     return null;
   }
@@ -67,7 +75,9 @@ class BusStopControllerApi {
   /// Parameters:
   ///
   /// * [DeleteBusStopDto] deleteBusStopDto (required):
-  Future<Response> deleteBusStopWithHttpInfo(DeleteBusStopDto deleteBusStopDto,) async {
+  Future<Response> deleteBusStopWithHttpInfo(
+    DeleteBusStopDto deleteBusStopDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/stop/delete';
 
@@ -80,7 +90,6 @@ class BusStopControllerApi {
 
     const contentTypes = <String>['application/json'];
 
-
     return apiClient.invokeAPI(
       path,
       'POST',
@@ -95,17 +104,24 @@ class BusStopControllerApi {
   /// Parameters:
   ///
   /// * [DeleteBusStopDto] deleteBusStopDto (required):
-  Future<ApiResponseDtoVoid?> deleteBusStop(DeleteBusStopDto deleteBusStopDto,) async {
-    final response = await deleteBusStopWithHttpInfo(deleteBusStopDto,);
+  Future<ApiResponseDtoVoid?> deleteBusStop(
+    DeleteBusStopDto deleteBusStopDto,
+  ) async {
+    final response = await deleteBusStopWithHttpInfo(
+      deleteBusStopDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoVoid',) as ApiResponseDtoVoid;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoVoid',
+      ) as ApiResponseDtoVoid;
     }
     return null;
   }
@@ -114,7 +130,9 @@ class BusStopControllerApi {
   /// Parameters:
   ///
   /// * [EditBusStopDto] editBusStopDto (required):
-  Future<Response> editBusStopWithHttpInfo(EditBusStopDto editBusStopDto,) async {
+  Future<Response> editBusStopWithHttpInfo(
+    EditBusStopDto editBusStopDto,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/stop/edit';
 
@@ -126,7 +144,6 @@ class BusStopControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -142,17 +159,24 @@ class BusStopControllerApi {
   /// Parameters:
   ///
   /// * [EditBusStopDto] editBusStopDto (required):
-  Future<ApiResponseDtoBusStopResponseDto?> editBusStop(EditBusStopDto editBusStopDto,) async {
-    final response = await editBusStopWithHttpInfo(editBusStopDto,);
+  Future<ApiResponseDtoBusStopResponseDto?> editBusStop(
+    EditBusStopDto editBusStopDto,
+  ) async {
+    final response = await editBusStopWithHttpInfo(
+      editBusStopDto,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoBusStopResponseDto',) as ApiResponseDtoBusStopResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoBusStopResponseDto',
+      ) as ApiResponseDtoBusStopResponseDto;
     }
     return null;
   }
@@ -170,7 +194,6 @@ class BusStopControllerApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -191,9 +214,12 @@ class BusStopControllerApi {
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ApiResponseDtoListBusStopResponseDto',) as ApiResponseDtoListBusStopResponseDto;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ApiResponseDtoListBusStopResponseDto',
+      ) as ApiResponseDtoListBusStopResponseDto;
     }
     return null;
   }

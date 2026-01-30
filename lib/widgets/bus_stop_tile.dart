@@ -35,10 +35,7 @@ class BusStopTile extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2.5,
-                    ),
+                    border: Border.all(color: Colors.white, width: 2.5),
                   ),
                 ),
                 Expanded(
@@ -50,17 +47,14 @@ class BusStopTile extends StatelessWidget {
               ],
             ),
           ),
-          
+
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 18), 
+              padding: const EdgeInsets.symmetric(vertical: 18),
               alignment: Alignment.centerLeft,
               child: Text(
                 stopName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
           ),

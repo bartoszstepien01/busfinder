@@ -137,8 +137,14 @@ abstract class AppLocalizations {
   /// No description provided for @name.
   ///
   /// In en, this message translates to:
-  /// **'Name'**
+  /// **'First name'**
   String get name;
+
+  /// No description provided for @surname.
+  ///
+  /// In en, this message translates to:
+  /// **'Last name'**
+  String get surname;
 
   /// No description provided for @timetables.
   ///
@@ -161,8 +167,8 @@ abstract class AppLocalizations {
   /// No description provided for @hello.
   ///
   /// In en, this message translates to:
-  /// **'Hello, {name}!'**
-  String hello(Object name);
+  /// **'Hello!'**
+  String get hello;
 
   /// No description provided for @general.
   ///
@@ -283,6 +289,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bus stop name'**
   String get stopName;
+
+  /// No description provided for @mainRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Main route'**
+  String get mainRoute;
+
+  /// No description provided for @allVariants.
+  ///
+  /// In en, this message translates to:
+  /// **'All variants'**
+  String get allVariants;
+
+  /// No description provided for @workday.
+  ///
+  /// In en, this message translates to:
+  /// **'Workday'**
+  String get workday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @holiday.
+  ///
+  /// In en, this message translates to:
+  /// **'Holiday'**
+  String get holiday;
+
+  /// No description provided for @special.
+  ///
+  /// In en, this message translates to:
+  /// **'Special'**
+  String get special;
+
+  /// No description provided for @noSchedulesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedules available for this stop.'**
+  String get noSchedulesAvailable;
+
+  /// No description provided for @noBusesAtThisStop.
+  ///
+  /// In en, this message translates to:
+  /// **'No buses at this stop for this schedule.'**
+  String get noBusesAtThisStop;
+
+  /// No description provided for @legend.
+  ///
+  /// In en, this message translates to:
+  /// **'Legend'**
+  String get legend;
+
+  /// No description provided for @selectRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Select route'**
+  String get selectRoute;
+
+  /// No description provided for @locationDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Location services are disabled.'**
+  String get locationDisabled;
+
+  /// No description provided for @permissionsDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permissions are denied.'**
+  String get permissionsDenied;
+
+  /// No description provided for @permissionsDeniedPermanently.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permissions are permanently denied.'**
+  String get permissionsDeniedPermanently;
+
+  /// No description provided for @drivingStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving started.'**
+  String get drivingStarted;
+
+  /// No description provided for @locationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Location sent at {datetime}'**
+  String locationSent(Object datetime);
+
+  /// No description provided for @drivingStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving stopped.'**
+  String get drivingStopped;
+
+  /// No description provided for @stopDriving.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop driving'**
+  String get stopDriving;
+
+  /// No description provided for @startDriving.
+  ///
+  /// In en, this message translates to:
+  /// **'Start driving'**
+  String get startDriving;
+
+  /// No description provided for @driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get driver;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @routeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus route name'**
+  String get routeName;
+
+  /// No description provided for @addVariant.
+  ///
+  /// In en, this message translates to:
+  /// **'Add variant'**
+  String get addVariant;
+
+  /// No description provided for @editVariant.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit variant'**
+  String get editVariant;
+
+  /// No description provided for @variantName.
+  ///
+  /// In en, this message translates to:
+  /// **'Variant name'**
+  String get variantName;
+
+  /// No description provided for @busRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus routes'**
+  String get busRoutes;
+
+  /// No description provided for @areYouSureDeleteRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this route ({route})?'**
+  String areYouSureDeleteRoute(Object route);
+
+  /// No description provided for @editRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit route'**
+  String get editRoute;
+
+  /// No description provided for @nStops.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No stops} =1{1 stop} other{{count} stops}}'**
+  String nStops(num count);
+
+  /// No description provided for @standard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get standard;
+
+  /// No description provided for @addSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add schedule'**
+  String get addSchedule;
+
+  /// No description provided for @dayType.
+  ///
+  /// In en, this message translates to:
+  /// **'Day type'**
+  String get dayType;
+
+  /// No description provided for @editSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit schedule'**
+  String get editSchedule;
+
+  /// No description provided for @noCourses.
+  ///
+  /// In en, this message translates to:
+  /// **'No rides'**
+  String get noCourses;
+
+  /// No description provided for @tapToAddCourse.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the + button to add a course'**
+  String get tapToAddCourse;
+
+  /// No description provided for @course.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride'**
+  String get course;
+
+  /// No description provided for @addCourse.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ride'**
+  String get addCourse;
+
+  /// No description provided for @editCourse.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit ride'**
+  String get editCourse;
+
+  /// No description provided for @setTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Set time'**
+  String get setTime;
+
+  /// No description provided for @noSchedules.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedules'**
+  String get noSchedules;
+
+  /// No description provided for @allTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'All types'**
+  String get allTypes;
+
+  /// No description provided for @allRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'All routes'**
+  String get allRoutes;
+
+  /// No description provided for @schedules.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedules'**
+  String get schedules;
+
+  /// No description provided for @system.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get system;
+
+  /// No description provided for @light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get light;
+
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
+  /// No description provided for @errorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred. Check your Internet connection'**
+  String get errorOccurred;
+
+  /// No description provided for @areYouSureDeleteSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this schedule ({schedule})?'**
+  String areYouSureDeleteSchedule(Object schedule);
+
+  /// No description provided for @variant.
+  ///
+  /// In en, this message translates to:
+  /// **'Variant'**
+  String get variant;
+
+  /// No description provided for @stopTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop times'**
+  String get stopTimes;
+
+  /// No description provided for @busRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Route'**
+  String get busRoute;
+
+  /// No description provided for @variants.
+  ///
+  /// In en, this message translates to:
+  /// **'Variants'**
+  String get variants;
+
+  /// No description provided for @addRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Add bus route'**
+  String get addRoute;
 }
 
 class _AppLocalizationsDelegate

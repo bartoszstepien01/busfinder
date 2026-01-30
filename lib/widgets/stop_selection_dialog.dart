@@ -1,3 +1,4 @@
+import 'package:busfinder/l10n/app_localizations.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,10 @@ class StopSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: const Text('Add Stop'),
+      title: Text(localizations.addStop),
       content: SizedBox(
         width: double.maxFinite,
         child: ListView.builder(

@@ -1,16 +1,15 @@
-import 'dart:convert';
-
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/bus_route_timeline.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/l10n/app_localizations.dart';
+import 'package:busfinder/widgets/bus_route_timeline.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
-import 'package:vector_map_tiles/vector_map_tiles.dart';
+import 'package:busfinder/services/osrm_service.dart';
+import 'package:busfinder/widgets/common/bus_map.dart';
 
 class BusRouteViewRoute extends StatefulWidget {
   final BusRouteResponseShortDto route;
@@ -31,18 +30,12 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
   final MapController _mapController = MapController();
   final DraggableScrollableController sheetController =
       DraggableScrollableController();
-  Style? style;
 
   @override
   void initState() {
     super.initState();
-    StyleReader(
-      uri: 'https://api.maptiler.com/maps/dataviz-v4-dark/style.json?key={key}',
-      apiKey: '',
-    ).read().then((style) {
-      this.style = style;
-      _fetchSchedules();
-    });
+
+    _fetchSchedules();
   }
 
   Future<void> _fetchSchedules() async {
@@ -98,114 +91,120 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
             })
             .toList();
 
-        _routePoints = await _fetchOsrmRoute(locations);
-
         setState(() {
           _stops = response.data.toList();
           _stopsLocations = locations;
+          _routePoints = [];
           _isLoading = false;
         });
+
+        _fetchRoutePoints(locations);
       }
     } catch (e) {
       if (mounted) {
         ErrorDialog.show(context, e);
       }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+    }
+  }
+
+  Future<void> _fetchRoutePoints(List<LatLng> locations) async {
+    final routePoints = await OsrmService.fetchRoute(locations);
+    if (mounted) {
+      setState(() {
+        _routePoints = routePoints;
+      });
+      if (routePoints.isNotEmpty) {
+        _mapController.fitCamera(
+          CameraFit.bounds(
+            bounds: LatLngBounds.fromPoints(routePoints),
+            padding: const EdgeInsets.all(32),
+          ),
+        );
       }
     }
   }
 
-  String _buildOsrmUrl(List<LatLng> points) {
-    final coords = points.map((p) => '${p.longitude},${p.latitude}').join(';');
-
-    return 'https://router.project-osrm.org/route/v1/driving/$coords'
-        '?overview=full&geometries=geojson';
-  }
-
-  Future<List<LatLng>> _fetchOsrmRoute(List<LatLng> points) async {
-    final url = Uri.parse(_buildOsrmUrl(points));
-    final response = await http.get(url);
-
-    final data = jsonDecode(response.body);
-    final coordinates = data['routes'][0]['geometry']['coordinates'] as List;
-
-    return coordinates
-        .map((c) => LatLng(c[1], c[0])) // lat, lon
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final isDesktop = MediaQuery.of(context).size.width >= 1000;
 
     return Scaffold(
       appBar: AppBar(),
       body: _isLoading
           ? const LoadingIndicator()
           : Stack(
-                children: [
-                  FlutterMap(
-                    mapController: _mapController,
-                    options: MapOptions(
-                      initialCenter: _stopsLocations.first,
-                      initialZoom: 5,
-                      maxZoom: 18,
-                      backgroundColor: theme.colorScheme.surface,
-                      initialCameraFit: CameraFit.bounds(
-                        bounds: LatLngBounds.fromPoints(_routePoints),
-                        padding: const EdgeInsets.all(32),
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: BusMap(
+                        mapController: _mapController,
+                        routePoints: _routePoints,
+                        stopsLocations: _stopsLocations,
+                        initialCenter: _stopsLocations.isNotEmpty
+                            ? _stopsLocations.first
+                            : const LatLng(52.2297, 21.0122),
+                        initialZoom: 5,
+                        initialCameraFit: _routePoints.isNotEmpty
+                            ? CameraFit.bounds(
+                                bounds: LatLngBounds.fromPoints(_routePoints),
+                                padding: const EdgeInsets.all(32),
+                              )
+                            : null,
                       ),
                     ),
-                    children: [
-                      VectorTileLayer(
-                        tileProviders: style!.providers,
-                        theme: style!.theme,
-                        tileOffset: TileOffset.DEFAULT,
-                      ),
-                      // TileLayer(
-                      // urlTemplate:
-                      // 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      // userAgentPackageName:
-                      // 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
-                      // ),
-                      PolylineLayer(
-                        polylines: [
-                          Polyline(
-                            points: _routePoints,
-                            strokeWidth: 4,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                      MarkerLayer(
-                        markers: _stopsLocations
-                            .map(
-                              (p) => Marker(
-                                point: p,
-                                width: 15,
-                                height: 15,
-                                child: Container(
-                                  width: 15,
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: theme.colorScheme.surface,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 4,
-                                    ),
-                                  ),
+                    if (isDesktop)
+                      Expanded(
+                        flex: 1,
+                        child: DefaultTabController(
+                          length: 2,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                  _route.name,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                               ),
-                            )
-                            .toList(),
+                              TabBar(
+                                tabs: [
+                                  Tab(text: localizations.mainRoute),
+                                  Tab(text: localizations.allVariants),
+                                ],
+                              ),
+                              Expanded(
+                                child: TabBarView(
+                                  children: [
+                                    BusRouteTimeline(
+                                      variants: _route.variants
+                                          .where((variant) => variant.standard)
+                                          .toList(),
+                                      allVariants: _route.variants,
+                                      busStops: _stops,
+                                      schedules: _schedules,
+                                      busRouteId: widget.route.id,
+                                    ),
+                                    BusRouteTimeline(
+                                      variants: _route.variants,
+                                      allVariants: _route.variants,
+                                      busStops: _stops,
+                                      schedules: _schedules,
+                                      busRouteId: widget.route.id,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                  ],
+                ),
+                if (!isDesktop)
                   DraggableScrollableSheet(
                     initialChildSize: 0.5,
                     minChildSize: 0.12,
@@ -228,7 +227,7 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
                                 width: 40,
                                 height: 4,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[300],
+                                  color: theme.colorScheme.onSurface,
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
@@ -240,9 +239,9 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
                                 ),
                               ),
                               TabBar(
-                                tabs: const [
-                                  Tab(text: 'Main route'),
-                                  Tab(text: 'All variants'),
+                                tabs: [
+                                  Tab(text: localizations.mainRoute),
+                                  Tab(text: localizations.allVariants),
                                 ],
                               ),
                               Expanded(
@@ -252,12 +251,14 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
                                       variants: _route.variants
                                           .where((variant) => variant.standard)
                                           .toList(),
+                                      allVariants: _route.variants,
                                       busStops: _stops,
                                       schedules: _schedules,
                                       busRouteId: widget.route.id,
                                     ),
                                     BusRouteTimeline(
                                       variants: _route.variants,
+                                      allVariants: _route.variants,
                                       busStops: _stops,
                                       schedules: _schedules,
                                       busRouteId: widget.route.id,
@@ -271,8 +272,8 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
                       );
                     },
                   ),
-                ],
-              ),
+              ],
+            ),
     );
   }
 }

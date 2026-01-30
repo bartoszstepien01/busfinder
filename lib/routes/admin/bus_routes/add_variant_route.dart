@@ -1,9 +1,10 @@
-import 'package:busfinder/api_service.dart';
-import 'package:busfinder/components/bus_stop_list.dart';
-import 'package:busfinder/components/error_dialog.dart';
-import 'package:busfinder/components/loading_indicator.dart';
-import 'package:busfinder/components/stop_selection_dialog.dart';
-import 'package:busfinder/components/wizard_layout.dart';
+import 'package:busfinder/services/api_service.dart';
+import 'package:busfinder/l10n/app_localizations.dart';
+import 'package:busfinder/widgets/bus_stop_list.dart';
+import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/loading_indicator.dart';
+import 'package:busfinder/widgets/stop_selection_dialog.dart';
+import 'package:busfinder/widgets/wizard_layout.dart';
 
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
@@ -50,8 +51,11 @@ class _AddVariantRouteState extends State<AddVariantRoute> {
                 .map(
                   (id) => _availableStops.firstWhere(
                     (stop) => stop.id == id,
-                    orElse: () =>
-                        BusStopResponseDto(id: id, name: 'Unknown Stop', location: LocationDto(latitude: 0, longitude: 0)),
+                    orElse: () => BusStopResponseDto(
+                      id: id,
+                      name: '',
+                      location: LocationDto(latitude: 0, longitude: 0),
+                    ),
                   ),
                 )
                 .toList();
@@ -69,13 +73,13 @@ class _AddVariantRouteState extends State<AddVariantRoute> {
     }
   }
 
-  void _saveVariant() {
+  Future<void> _saveVariant() async {
     final name = _formKey.currentState?.fields['name']?.value as String?;
     final variant = RouteVariantResponseDto(
       id: widget.variant?.id ?? '',
       name: name ?? '',
       busStops: _selectedStops.map((e) => e.id).toList(),
-      standard: widget.variant?.standard ?? false
+      standard: widget.variant?.standard ?? false,
     );
     context.pop(variant);
   }
@@ -87,7 +91,9 @@ class _AddVariantRouteState extends State<AddVariantRoute> {
         availableStops: _availableStops,
         onStopSelected: (stop) {
           setState(() {
-            _selectedStops.add(stop);
+            if (!_selectedStops.contains(stop)) {
+              _selectedStops.add(stop);
+            }
           });
         },
       ),
@@ -96,16 +102,25 @@ class _AddVariantRouteState extends State<AddVariantRoute> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(
-            title: Text(widget.variant == null ? 'Add Variant' : 'Edit Variant')),
+          title: Text(
+            widget.variant == null
+                ? localizations.addVariant
+                : localizations.editVariant,
+          ),
+        ),
         body: const LoadingIndicator(),
       );
     }
 
     return WizardLayout(
-      title: widget.variant == null ? 'Add Variant' : 'Edit Variant',
+      title: widget.variant == null
+          ? localizations.addVariant
+          : localizations.editVariant,
       formKey: _formKey,
       pageController: _pageViewController,
       onNext: () {
@@ -121,17 +136,14 @@ class _AddVariantRouteState extends State<AddVariantRoute> {
       onSave: _saveVariant,
       pages: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             children: [
               FormBuilderTextField(
                 name: 'name',
                 initialValue: widget.variant?.name,
-                decoration: const InputDecoration(
-                  labelText: 'Variant Name',
+                decoration: InputDecoration(
+                  labelText: localizations.variantName,
                   icon: Icon(Icons.label),
                 ),
                 validator: FormBuilderValidators.required(),
@@ -142,21 +154,15 @@ class _AddVariantRouteState extends State<AddVariantRoute> {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Stops',
+                    localizations.stops,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: _addStop,
-                  ),
+                  IconButton(icon: const Icon(Icons.add), onPressed: _addStop),
                 ],
               ),
             ),

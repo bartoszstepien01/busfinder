@@ -52,22 +52,25 @@ class RegisterUserDto {
   String? surname;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is RegisterUserDto &&
-    other.email == email &&
-    other.password == password &&
-    other.name == name &&
-    other.surname == surname;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RegisterUserDto &&
+          other.email == email &&
+          other.password == password &&
+          other.name == name &&
+          other.surname == surname;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (email == null ? 0 : email!.hashCode) +
-    (password == null ? 0 : password!.hashCode) +
-    (name == null ? 0 : name!.hashCode) +
-    (surname == null ? 0 : surname!.hashCode);
+      // ignore: unnecessary_parenthesis
+      (email == null ? 0 : email!.hashCode) +
+      (password == null ? 0 : password!.hashCode) +
+      (name == null ? 0 : name!.hashCode) +
+      (surname == null ? 0 : surname!.hashCode);
 
   @override
-  String toString() => 'RegisterUserDto[email=$email, password=$password, name=$name, surname=$surname]';
+  String toString() =>
+      'RegisterUserDto[email=$email, password=$password, name=$name, surname=$surname]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -106,8 +109,10 @@ class RegisterUserDto {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "RegisterUserDto[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "RegisterUserDto[$key]" has a null value in JSON.');
+          assert(json.containsKey(key),
+              'Required key "RegisterUserDto[$key]" is missing from JSON.');
+          assert(json[key] != null,
+              'Required key "RegisterUserDto[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -122,7 +127,10 @@ class RegisterUserDto {
     return null;
   }
 
-  static List<RegisterUserDto> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<RegisterUserDto> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <RegisterUserDto>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -150,20 +158,24 @@ class RegisterUserDto {
   }
 
   // maps a json object with a list of RegisterUserDto-objects as value to a dart map
-  static Map<String, List<RegisterUserDto>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<RegisterUserDto>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<RegisterUserDto>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = RegisterUserDto.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = RegisterUserDto.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
   }
 
   /// The list of required keys that must be present in a JSON.
-  static const requiredKeys = <String>{
-  };
+  static const requiredKeys = <String>{};
 }
-
