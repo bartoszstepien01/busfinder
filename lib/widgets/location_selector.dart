@@ -26,7 +26,8 @@ class LocationSelector extends StatelessWidget {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://api.maptiler.com/maps/openstreetmap/{z}/{x}/{y}.jpg?key=$maptilerKey',
+              urlTemplate:
+                  'https://api.maptiler.com/maps/openstreetmap/{z}/{x}/{y}.jpg?key=$maptilerKey',
             ),
           ],
         ),

@@ -27,10 +27,7 @@ class Profile extends StatelessWidget {
                 child: Icon(Icons.person, size: 40),
               ),
               const SizedBox(width: 20),
-              Text(
-                localizations.hello,
-                style: theme.textTheme.headlineMedium,
-              ),
+              Text(localizations.hello, style: theme.textTheme.headlineMedium),
             ],
           ),
         ),
