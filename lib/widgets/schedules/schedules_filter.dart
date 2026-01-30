@@ -56,6 +56,7 @@ class SchedulesFilter extends StatelessWidget {
           Expanded(
             child: DropdownButtonFormField<String?>(
               initialValue: selectedRouteId,
+              isExpanded: true,
               decoration: InputDecoration(
                 labelText: localizations.busRoute,
                 border: const OutlineInputBorder(),
@@ -67,12 +68,15 @@ class SchedulesFilter extends StatelessWidget {
               items: [
                 DropdownMenuItem<String?>(
                   value: null,
-                  child: Text(localizations.allRoutes),
+                  child: Text(
+                    localizations.allRoutes,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 ...routes.map(
                   (route) => DropdownMenuItem<String?>(
                     value: route.id,
-                    child: Text(route.name),
+                    child: Text(route.name, overflow: TextOverflow.ellipsis),
                   ),
                 ),
               ],
@@ -83,6 +87,7 @@ class SchedulesFilter extends StatelessWidget {
           Expanded(
             child: DropdownButtonFormField<String?>(
               initialValue: selectedDayType,
+              isExpanded: true,
               decoration: InputDecoration(
                 labelText: localizations.dayType,
                 border: const OutlineInputBorder(),
@@ -94,12 +99,18 @@ class SchedulesFilter extends StatelessWidget {
               items: [
                 DropdownMenuItem<String?>(
                   value: null,
-                  child: Text(localizations.allTypes),
+                  child: Text(
+                    localizations.allTypes,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 ...dayTypes.map(
                   (type) => DropdownMenuItem<String?>(
                     value: type,
-                    child: Text(_getDayTypeLabel(context, type)),
+                    child: Text(
+                      _getDayTypeLabel(context, type),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ],

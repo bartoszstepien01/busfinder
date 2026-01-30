@@ -1,11 +1,11 @@
 import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
-import 'package:busfinder/widgets/confirm_delete_dialog.dart';
-import 'package:busfinder/widgets/error_dialog.dart';
-import 'package:busfinder/widgets/loading_indicator.dart';
-import 'package:busfinder/widgets/responsive_container.dart';
-import 'package:busfinder/routes/admin/schedules/widgets/schedules_filter.dart';
-import 'package:busfinder/routes/admin/schedules/widgets/schedule_list_item.dart';
+import 'package:busfinder/widgets/dialogs/confirm_delete_dialog.dart';
+import 'package:busfinder/widgets/dialogs/error_dialog.dart';
+import 'package:busfinder/widgets/common/loading_indicator.dart';
+import 'package:busfinder/widgets/layout/responsive_container.dart';
+import 'package:busfinder/widgets/schedules/schedules_filter.dart';
+import 'package:busfinder/widgets/schedules/schedule_list_item.dart';
 
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';

@@ -1,11 +1,11 @@
 import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
 
-import 'package:busfinder/widgets/bus_stop_list.dart';
-import 'package:busfinder/widgets/error_dialog.dart';
-import 'package:busfinder/widgets/loading_indicator.dart';
-import 'package:busfinder/widgets/stop_selection_dialog.dart';
-import 'package:busfinder/widgets/wizard_layout.dart';
+import 'package:busfinder/widgets/bus/bus_stop_list.dart';
+import 'package:busfinder/widgets/dialogs/error_dialog.dart';
+import 'package:busfinder/widgets/common/loading_indicator.dart';
+import 'package:busfinder/widgets/dialogs/stop_selection_dialog.dart';
+import 'package:busfinder/widgets/layout/wizard_layout.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -91,16 +91,8 @@ class _AddBusRouteRouteState extends State<AddBusRouteRoute> {
         availableStops: _availableStops,
         onStopSelected: (stop) {
           setState(() {
-            _selectedStops.add(
-              BusStopResponseDto(
-                id: stop.id,
-                name: stop.name,
-                location: LocationDto(
-                  latitude: stop.location.latitude,
-                  longitude: stop.location.longitude,
-                ),
-              ),
-            );
+            if (_selectedStops.contains(stop)) return;
+            _selectedStops.add(stop);
           });
         },
       ),

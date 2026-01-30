@@ -1,7 +1,7 @@
 import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
-import 'package:busfinder/widgets/error_dialog.dart';
-import 'package:busfinder/widgets/responsive_container.dart';
+import 'package:busfinder/widgets/dialogs/error_dialog.dart';
+import 'package:busfinder/widgets/layout/responsive_container.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

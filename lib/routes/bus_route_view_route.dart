@@ -1,8 +1,8 @@
 import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
-import 'package:busfinder/widgets/bus_route_timeline.dart';
-import 'package:busfinder/widgets/error_dialog.dart';
-import 'package:busfinder/widgets/loading_indicator.dart';
+import 'package:busfinder/widgets/bus/bus_route_timeline.dart';
+import 'package:busfinder/widgets/dialogs/error_dialog.dart';
+import 'package:busfinder/widgets/common/loading_indicator.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -28,13 +28,10 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
   late List<LatLng> _routePoints;
   late List<ScheduleResponseDto> _schedules;
   final MapController _mapController = MapController();
-  final DraggableScrollableController sheetController =
-      DraggableScrollableController();
 
   @override
   void initState() {
     super.initState();
-
     _fetchSchedules();
   }
 
@@ -126,8 +123,6 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
     final isDesktop = MediaQuery.of(context).size.width >= 1000;
 
     return Scaffold(
@@ -159,47 +154,11 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
                     if (isDesktop)
                       Expanded(
                         flex: 1,
-                        child: DefaultTabController(
-                          length: 2,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  _route.name,
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                              ),
-                              TabBar(
-                                tabs: [
-                                  Tab(text: localizations.mainRoute),
-                                  Tab(text: localizations.allVariants),
-                                ],
-                              ),
-                              Expanded(
-                                child: TabBarView(
-                                  children: [
-                                    BusRouteTimeline(
-                                      variants: _route.variants
-                                          .where((variant) => variant.standard)
-                                          .toList(),
-                                      allVariants: _route.variants,
-                                      busStops: _stops,
-                                      schedules: _schedules,
-                                      busRouteId: widget.route.id,
-                                    ),
-                                    BusRouteTimeline(
-                                      variants: _route.variants,
-                                      allVariants: _route.variants,
-                                      busStops: _stops,
-                                      schedules: _schedules,
-                                      busRouteId: widget.route.id,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: _BusRouteDetails(
+                          route: _route,
+                          stops: _stops,
+                          schedules: _schedules,
+                          busRouteId: widget.route.id,
                         ),
                       ),
                   ],
@@ -211,69 +170,100 @@ class _BusRouteViewRouteState extends State<BusRouteViewRoute> {
                     maxChildSize: 0.7,
                     builder: (context, scrollController) {
                       return Material(
-                        color: theme.colorScheme.surface,
+                        color: Theme.of(context).colorScheme.surface,
                         elevation: 3,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(20),
                           ),
                         ),
-                        child: DefaultTabController(
-                          length: 2,
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.onSurface,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              width: 40,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                borderRadius: BorderRadius.circular(2),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  _route.name,
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
+                            ),
+                            Expanded(
+                              child: _BusRouteDetails(
+                                route: _route,
+                                stops: _stops,
+                                schedules: _schedules,
+                                busRouteId: widget.route.id,
                               ),
-                              TabBar(
-                                tabs: [
-                                  Tab(text: localizations.mainRoute),
-                                  Tab(text: localizations.allVariants),
-                                ],
-                              ),
-                              Expanded(
-                                child: TabBarView(
-                                  children: [
-                                    BusRouteTimeline(
-                                      variants: _route.variants
-                                          .where((variant) => variant.standard)
-                                          .toList(),
-                                      allVariants: _route.variants,
-                                      busStops: _stops,
-                                      schedules: _schedules,
-                                      busRouteId: widget.route.id,
-                                    ),
-                                    BusRouteTimeline(
-                                      variants: _route.variants,
-                                      allVariants: _route.variants,
-                                      busStops: _stops,
-                                      schedules: _schedules,
-                                      busRouteId: widget.route.id,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       );
                     },
                   ),
               ],
             ),
+    );
+  }
+}
+
+class _BusRouteDetails extends StatelessWidget {
+  final BusRouteResponseDto route;
+  final List<BusStopResponseDto> stops;
+  final List<ScheduleResponseDto> schedules;
+  final String busRouteId;
+
+  const _BusRouteDetails({
+    required this.route,
+    required this.stops,
+    required this.schedules,
+    required this.busRouteId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              route.name,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          TabBar(
+            tabs: [
+              Tab(text: localizations.mainRoute),
+              Tab(text: localizations.allVariants),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                BusRouteTimeline(
+                  variants: route.variants
+                      .where((variant) => variant.standard)
+                      .toList(),
+                  allVariants: route.variants,
+                  busStops: stops,
+                  schedules: schedules,
+                  busRouteId: busRouteId,
+                ),
+                BusRouteTimeline(
+                  variants: route.variants,
+                  allVariants: route.variants,
+                  busStops: stops,
+                  schedules: schedules,
+                  busRouteId: busRouteId,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

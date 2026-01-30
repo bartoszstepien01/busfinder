@@ -29,108 +29,112 @@ class _MainRouteState extends State<MainRoute> {
         final tabCount =
             (state is LoggedIn && state.userType == UserType.driver) ? 4 : 3;
 
-        return Scaffold(
-          body: Row(
-            children: [
-              if (isDesktop)
-                NavigationRail(
-                  selectedIndex: _selectedIndex % tabCount,
-                  onDestinationSelected: (int index) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                  labelType: NavigationRailLabelType.all,
-                  destinations: <NavigationRailDestination>[
-                    NavigationRailDestination(
-                      icon: Icon(Icons.schedule),
-                      label: Text(localizations.timetables),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.map),
-                      label: Text(localizations.map),
-                    ),
-                    if (state is LoggedIn && state.userType == UserType.driver)
+        return SafeArea(
+          child: Scaffold(
+            body: Row(
+              children: [
+                if (isDesktop)
+                  NavigationRail(
+                    selectedIndex: _selectedIndex % tabCount,
+                    onDestinationSelected: (int index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                    labelType: NavigationRailLabelType.all,
+                    destinations: <NavigationRailDestination>[
                       NavigationRailDestination(
-                        icon: Icon(Icons.directions_bus),
-                        label: Text(localizations.driver),
+                        icon: Icon(Icons.schedule),
+                        label: Text(localizations.timetables),
                       ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.person),
-                      label: Text(localizations.profile),
-                    ),
-                  ],
-                ),
-              if (isDesktop) const VerticalDivider(thickness: 1, width: 1),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 320),
-                  switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeInCubic,
-                  transitionBuilder: (child, animation) {
-                    final fade = CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeOut,
-                    );
-                    final slide =
-                        Tween<Offset>(
-                          begin: const Offset(0.12, 0),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeOutCubic,
-                          ),
-                        );
-
-                    return FadeTransition(
-                      opacity: fade,
-                      child: SlideTransition(position: slide, child: child),
-                    );
-                  },
-                  child: IndexedStack(
-                    key: ValueKey(_selectedIndex),
-                    index: _selectedIndex % tabCount,
-                    children: <Widget>[
-                      Timetables(),
-                      MapWidget(),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.map),
+                        label: Text(localizations.map),
+                      ),
                       if (state is LoggedIn &&
                           state.userType == UserType.driver)
-                        Driver(),
-                      Profile(),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.directions_bus),
+                          label: Text(localizations.driver),
+                        ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.person),
+                        label: Text(localizations.profile),
+                      ),
                     ],
                   ),
+                if (isDesktop) const VerticalDivider(thickness: 1, width: 1),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 320),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    transitionBuilder: (child, animation) {
+                      final fade = CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOut,
+                      );
+                      final slide =
+                          Tween<Offset>(
+                            begin: const Offset(0.12, 0),
+                            end: Offset.zero,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeOutCubic,
+                            ),
+                          );
+
+                      return FadeTransition(
+                        opacity: fade,
+                        child: SlideTransition(position: slide, child: child),
+                      );
+                    },
+                    child: IndexedStack(
+                      key: ValueKey(_selectedIndex),
+                      index: _selectedIndex % tabCount,
+                      children: <Widget>[
+                        Timetables(),
+                        MapWidget(),
+                        if (state is LoggedIn &&
+                            state.userType == UserType.driver)
+                          Driver(),
+                        Profile(),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          bottomNavigationBar: isDesktop
-              ? null
-              : BottomNavigationBar(
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.schedule),
-                      label: localizations.timetables,
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.map),
-                      label: localizations.map,
-                    ),
-                    if (state is LoggedIn && state.userType == UserType.driver)
+              ],
+            ),
+            bottomNavigationBar: isDesktop
+                ? null
+                : BottomNavigationBar(
+                    items: <BottomNavigationBarItem>[
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.directions_bus),
-                        label: localizations.driver,
+                        icon: Icon(Icons.schedule),
+                        label: localizations.timetables,
                       ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.person),
-                      label: localizations.profile,
-                    ),
-                  ],
-                  currentIndex: _selectedIndex % tabCount,
-                  onTap: (i) => setState(() => _selectedIndex = i),
-                  selectedItemColor: theme.colorScheme.primary,
-                  unselectedItemColor: theme.colorScheme.onSurfaceVariant,
-                ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.map),
+                        label: localizations.map,
+                      ),
+                      if (state is LoggedIn &&
+                          state.userType == UserType.driver)
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.directions_bus),
+                          label: localizations.driver,
+                        ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.person),
+                        label: localizations.profile,
+                      ),
+                    ],
+                    currentIndex: _selectedIndex % tabCount,
+                    onTap: (i) => setState(() => _selectedIndex = i),
+                    selectedItemColor: theme.colorScheme.primary,
+                    unselectedItemColor: theme.colorScheme.onSurfaceVariant,
+                  ),
+          ),
         );
       },
     );

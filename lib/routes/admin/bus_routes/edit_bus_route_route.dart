@@ -1,8 +1,8 @@
 import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
-import 'package:busfinder/widgets/error_dialog.dart';
-import 'package:busfinder/widgets/loading_indicator.dart';
-import 'package:busfinder/widgets/wizard_layout.dart';
+import 'package:busfinder/widgets/dialogs/error_dialog.dart';
+import 'package:busfinder/widgets/common/loading_indicator.dart';
+import 'package:busfinder/widgets/layout/wizard_layout.dart';
 
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';

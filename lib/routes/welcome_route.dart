@@ -55,7 +55,7 @@ class WelcomeRoute extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth < 1200) {
+          if (constraints.maxWidth < 1000) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

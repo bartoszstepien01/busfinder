@@ -1,8 +1,8 @@
 import 'package:busfinder/services/api_service.dart';
-import 'package:busfinder/widgets/auth_form_wrapper.dart';
+import 'package:busfinder/widgets/layout/auth_form_wrapper.dart';
 import 'package:busfinder/bloc/authentication_cubit.dart';
 import 'package:busfinder/bloc/authentication_state.dart';
-import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/dialogs/error_dialog.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';

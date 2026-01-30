@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:busfinder/services/api_service.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
-import 'package:busfinder/widgets/error_dialog.dart';
+import 'package:busfinder/widgets/dialogs/error_dialog.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

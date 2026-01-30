@@ -1,6 +1,6 @@
-import 'package:busfinder/widgets/keep_alive_wrapper.dart';
+import 'package:busfinder/widgets/layout/keep_alive_wrapper.dart';
 import 'package:busfinder/l10n/app_localizations.dart';
-import 'package:busfinder/widgets/responsive_container.dart';
+import 'package:busfinder/widgets/layout/responsive_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 

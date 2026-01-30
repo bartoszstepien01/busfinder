@@ -1,5 +1,5 @@
 import 'package:busfinder/l10n/app_localizations.dart';
-import 'package:busfinder/widgets/timetable_list.dart';
+import 'package:busfinder/widgets/bus/timetable_list.dart';
 import 'package:busfinder_api/api.dart';
 import 'package:flutter/material.dart';
 
