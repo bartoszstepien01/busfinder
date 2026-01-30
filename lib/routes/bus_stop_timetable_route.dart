@@ -22,10 +22,7 @@ class BusStopTimetableArguments {
 class BusStopTimetableRoute extends StatefulWidget {
   final BusStopTimetableArguments args;
 
-  const BusStopTimetableRoute({
-    super.key,
-    required this.args,
-  });
+  const BusStopTimetableRoute({super.key, required this.args});
 
   @override
   State<BusStopTimetableRoute> createState() => _BusStopTimetableRouteState();
@@ -60,8 +57,9 @@ class _BusStopTimetableRouteState extends State<BusStopTimetableRoute> {
 
     _variantLetters = {};
     int letterIndex = 0;
-    final sortedVariants = List<RouteVariantResponseDto>.from(widget.args.variants)
-      ..sort((a, b) => a.name.compareTo(b.name));
+    final sortedVariants = List<RouteVariantResponseDto>.from(
+      widget.args.variants,
+    )..sort((a, b) => a.name.compareTo(b.name));
 
     for (var variant in sortedVariants) {
       if (!variant.standard) {
