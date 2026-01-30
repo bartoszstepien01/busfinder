@@ -113,6 +113,7 @@ class _MapWidgetState extends State<MapWidget> {
 
     await _fetchRouteDetails(route.id);
     _subscribeToRoute(route.id);
+    _subscribeToRoute('all');
   }
 
   Future<void> _fetchRouteDetails(String routeId) async {
@@ -208,6 +209,7 @@ class _MapWidgetState extends State<MapWidget> {
         );
       });
     } else if (type == 'end') {
+      print('end received');
       setState(() {
         _busMarkers.remove(driverId);
       });
