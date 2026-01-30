@@ -36,7 +36,7 @@ class _MapWidgetState extends State<MapWidget> {
   LatLng? _userLocation;
   StreamSubscription<Position>? _positionStream;
 
-  dynamic _unsubscribeFn;
+  final List<dynamic> _unsubscribeFn = [];
 
   @override
   void initState() {
@@ -106,10 +106,11 @@ class _MapWidgetState extends State<MapWidget> {
       _busMarkers.clear();
     });
 
-    if (_unsubscribeFn != null) {
-      _unsubscribeFn();
-      _unsubscribeFn = null;
+    for (var i = 0; i < _unsubscribeFn.length; i++) {
+      _unsubscribeFn[i]();
     }
+
+    _unsubscribeFn.clear();
 
     await _fetchRouteDetails(route.id);
     _subscribeToRoute(route.id);
@@ -176,14 +177,16 @@ class _MapWidgetState extends State<MapWidget> {
       await connected.future;
     }
 
-    _unsubscribeFn = stompClient.subscribe(
-      destination: '/route/$routeId',
-      callback: (frame) {
-        if (frame.body != null) {
-          final data = jsonDecode(frame.body!);
-          _handleWebSocketMessage(data);
-        }
-      },
+    _unsubscribeFn.add(
+      stompClient.subscribe(
+        destination: '/route/$routeId',
+        callback: (frame) {
+          if (frame.body != null) {
+            final data = jsonDecode(frame.body!);
+            _handleWebSocketMessage(data);
+          }
+        },
+      ),
     );
   }
 
@@ -209,7 +212,6 @@ class _MapWidgetState extends State<MapWidget> {
         );
       });
     } else if (type == 'end') {
-      print('end received');
       setState(() {
         _busMarkers.remove(driverId);
       });
@@ -219,8 +221,8 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   void dispose() {
     _positionStream?.cancel();
-    if (_unsubscribeFn != null) {
-      _unsubscribeFn();
+    for (var i = 0; i < _unsubscribeFn.length; i++) {
+      _unsubscribeFn[i]();
     }
     super.dispose();
   }
